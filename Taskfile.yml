@@ -1,0 +1,8 @@
+version: "3"
+
+tasks:
+  start:
+    desc: "Start app"
+    cmds:
+      - go run ./cmd/sso-service/main.go --config=./configs/config.yml
+    silent: true
