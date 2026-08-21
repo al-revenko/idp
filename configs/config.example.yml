@@ -1,3 +1,0 @@
-env: "local" # local / dev / prod
-storage_path: "postgresql://postgres:mypassword@localhost:5432/idp"
-token_ttl: "1h"

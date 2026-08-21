@@ -28,18 +28,18 @@ func main() {
 
 	application := app.New(context.Background(), cfg, log)
 
+	log.Info("application starting", slog.String("op", "main"), slog.String("env", cfg.Env))
+
 	go application.MustStart()
-	log.Info("application ready")
 
 	stopSignal := make(chan os.Signal, 1)
 	signal.Notify(stopSignal, syscall.SIGTERM, syscall.SIGINT)
 
 	<-stopSignal
 
-	log.Info("application stopping")
-
 	err := application.Stop()
 	if err != nil {
+		log.Error("failed to gracefully stop application", slog.Any("error", err))
 		os.Exit(0)
 	}
 }

@@ -1,8 +1,53 @@
 version: "3"
 
+vars:
+  MIGRATION_DIR: ./db/sql/migrations
+  GRPC_GEN_DIR: ./proto/gen
+
+dotenv:
+  - .env.local
+  - .env.dev
+  - .env.prod
+
 tasks:
   start:
     desc: "Start app"
     cmds:
-      - go run ./cmd/idp/main.go --config=./configs/config.yml
+      - go run ./cmd/idp/main.go
+    silent: true
+
+  gen-rsa:
+    desc: "Generate RSA keys"
+    cmds:
+      - go run ./cmd/rsa-generator/main.go
+    silent: true
+
+  gen-proto:
+    desc: "Generate Go code from protobuf"
+    cmds:
+      - protoc -I proto --go_out={{.GRPC_GEN_DIR}} --go_opt=paths=source_relative --go-grpc_out={{.GRPC_GEN_DIR}} --go-grpc_opt=paths=source_relative proto/idp/idp.proto
+    silent: true
+
+  gen-sql:
+    desc: "Generate SQL code from db/sql folder"
+    cmds:
+      - sqlc generate
+    silent: true
+
+  migration-new:
+    desc: "Generate new database migrations"
+    cmds:
+      - goose create -dir={{.MIGRATION_DIR}} new sql
+    silent: true
+
+  migration-up:
+    desc: "Migrate the database to the latest version"
+    cmds:
+      - goose -dir={{.MIGRATION_DIR}} postgres $DB_STRING up
+    silent: true
+
+  migration-down:
+    desc: "Roll back the last database migration"
+    cmds:
+      - goose -dir={{.MIGRATION_DIR}} postgres $DB_STRING down
     silent: true
