@@ -5,7 +5,7 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/al-revenko/sso-service/internal/lib/config"
+	"github.com/al-revenko/idp/internal/lib/config"
 )
 
 type Addr = string

@@ -7,8 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/al-revenko/sso-service/internal/app"
-	"github.com/al-revenko/sso-service/internal/lib/config"
+	"github.com/al-revenko/idp/internal/app"
+	"github.com/al-revenko/idp/internal/lib/config"
 	"github.com/lmittmann/tint"
 )
 

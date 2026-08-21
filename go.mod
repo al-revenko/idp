@@ -1,4 +1,4 @@
-module github.com/al-revenko/sso-service
+module github.com/al-revenko/idp
 
 go 1.25.3
 

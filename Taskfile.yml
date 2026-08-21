@@ -4,5 +4,5 @@ tasks:
   start:
     desc: "Start app"
     cmds:
-      - go run ./cmd/sso-service/main.go --config=./configs/config.yml
+      - go run ./cmd/idp/main.go --config=./configs/config.yml
     silent: true
