@@ -347,7 +347,7 @@ func (x *UserRegisterRequest) GetPassword() string {
 
 type UserRegisterResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -382,11 +382,11 @@ func (*UserRegisterResponse) Descriptor() ([]byte, []int) {
 	return file_idp_idp_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *UserRegisterResponse) GetUserId() int64 {
+func (x *UserRegisterResponse) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
-	return 0
+	return ""
 }
 
 type UserLoginRequest struct {
@@ -451,7 +451,8 @@ func (x *UserLoginRequest) GetClientId() string {
 
 type UserLoginResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Token         string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	AccessToken   string                 `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
+	RefreshToken  string                 `protobuf:"bytes,2,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -486,16 +487,23 @@ func (*UserLoginResponse) Descriptor() ([]byte, []int) {
 	return file_idp_idp_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *UserLoginResponse) GetToken() string {
+func (x *UserLoginResponse) GetAccessToken() string {
 	if x != nil {
-		return x.Token
+		return x.AccessToken
+	}
+	return ""
+}
+
+func (x *UserLoginResponse) GetRefreshToken() string {
+	if x != nil {
+		return x.RefreshToken
 	}
 	return ""
 }
 
 type UserLogoutRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Token         string                 `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	RefreshToken  string                 `protobuf:"bytes,1,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -530,9 +538,9 @@ func (*UserLogoutRequest) Descriptor() ([]byte, []int) {
 	return file_idp_idp_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *UserLogoutRequest) GetToken() string {
+func (x *UserLogoutRequest) GetRefreshToken() string {
 	if x != nil {
-		return x.Token
+		return x.RefreshToken
 	}
 	return ""
 }
@@ -603,15 +611,16 @@ const file_idp_idp_proto_rawDesc = "" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\"/\n" +
 	"\x14UserRegisterResponse\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\x03R\x06userId\"g\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\"g\n" +
 	"\x10UserLoginRequest\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\x12\x1b\n" +
-	"\tclient_id\x18\x03 \x01(\tR\bclientId\")\n" +
-	"\x11UserLoginResponse\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token\")\n" +
-	"\x11UserLogoutRequest\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token\".\n" +
+	"\tclient_id\x18\x03 \x01(\tR\bclientId\"[\n" +
+	"\x11UserLoginResponse\x12!\n" +
+	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x12#\n" +
+	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken\"8\n" +
+	"\x11UserLogoutRequest\x12#\n" +
+	"\rrefresh_token\x18\x01 \x01(\tR\frefreshToken\".\n" +
 	"\x12UserLogoutResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess2Q\n" +
 	"\n" +

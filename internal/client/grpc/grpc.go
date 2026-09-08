@@ -3,6 +3,7 @@ package grpc
 import (
 	"context"
 
+	"github.com/al-revenko/idp/internal/lib/valid"
 	idpv1 "github.com/al-revenko/idp/proto/gen/idp"
 	"google.golang.org/grpc"
 )
@@ -22,7 +23,12 @@ func Register(grpc *grpc.Server, clientService ClientProvider) {
 }
 
 func (s *Server) ClientRegister(ctx context.Context, req *idpv1.ClientRegisterRequest) (*idpv1.ClientRegisterResponse, error) {
-	clientId, clientSecretToken, err := s.client.RegisterClient(ctx, req.Name)
+	reqDTO := &ClientRegisterRequest{Name: req.Name}
+	if err := valid.RequestDTO(reqDTO); err != nil {
+		return nil, err
+	}
+
+	clientId, clientSecretToken, err := s.client.RegisterClient(ctx, reqDTO.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -31,6 +37,11 @@ func (s *Server) ClientRegister(ctx context.Context, req *idpv1.ClientRegisterRe
 }
 
 func (s *Server) ClientDelete(ctx context.Context, req *idpv1.ClientDeleteRequest) (*idpv1.ClientDeleteResponse, error) {
+	reqDTO := &ClientDeleteRequest{ClientId: req.ClientId, ClientSecretToken: req.ClientSecretToken}
+	if err := valid.RequestDTO(reqDTO); err != nil {
+		return nil, err
+	}
+
 	err := s.client.DeleteClient(ctx, req.ClientId, req.ClientSecretToken)
 	if err != nil {
 		return nil, err

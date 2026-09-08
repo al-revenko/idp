@@ -9,3 +9,9 @@ type Client struct {
 	Name       string
 	SecretHash string
 }
+
+type User struct {
+	ID           string
+	Username     string
+	PasswordHash string
+}
