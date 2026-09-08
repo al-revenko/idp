@@ -4,6 +4,7 @@ import (
 	"context"
 
 	cl "github.com/al-revenko/idp/internal/client"
+	"github.com/al-revenko/idp/internal/lib/apperr"
 	"github.com/al-revenko/idp/internal/lib/crypt"
 	"github.com/al-revenko/idp/internal/lib/pkgmark"
 )
@@ -33,10 +34,21 @@ func New(store Store, hash HashProvider) *Service {
 	}
 }
 
-func (s *Service) RegisterClient(ctx context.Context, name string) (string, string, error) {
+func (s *Service) GetClientById(ctx context.Context, clientId string) (cl.Client, error) {
+	op := pkg.Op("Service.GetClientById")
+
+	client, err := s.store.GetClientById(ctx, clientId)
+	if err != nil {
+		return cl.Client{}, op.Err(err)
+	}
+
+	return cl.Client{ID: client.ID, Name: client.Name}, nil
+}
+
+func (s *Service) RegisterClient(ctx context.Context, name string) (clientId, clientSecret string, err error) {
 	op := pkg.Op("Service.RegisterClient")
 
-	clientSecret, err := crypt.GenerateOpagueToken()
+	clientSecret, err = crypt.GenerateOpagueToken()
 	if err != nil {
 		return "", "", op.Err(err)
 	}
@@ -46,7 +58,7 @@ func (s *Service) RegisterClient(ctx context.Context, name string) (string, stri
 		return "", "", op.Err(err)
 	}
 
-	clientId, err := s.store.CreateClient(ctx, name, secretHash)
+	clientId, err = s.store.CreateClient(ctx, name, secretHash)
 	if err != nil {
 		return "", "", op.Err(err)
 	}
@@ -67,7 +79,7 @@ func (s *Service) DeleteClient(ctx context.Context, clientId, clientSecret strin
 		return op.Err(err)
 	}
 	if !isValidToken {
-		return op.Err(cl.InvalidTokenError)
+		return op.Err(apperr.New(apperr.CodeUnauthorized, "invalid token"))
 	}
 
 	err = s.store.DeleteClient(ctx, clientId)

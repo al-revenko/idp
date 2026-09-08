@@ -1,4 +1,4 @@
-package derr
+package apperr
 
 import (
 	"errors"
@@ -16,17 +16,17 @@ const (
 	CodeInternal
 )
 
-type DomainError struct {
+type AppError struct {
 	Code  int32
 	Msg   string
 	Cause error
 }
 
-func (e DomainError) Error() string {
+func (e AppError) Error() string {
 	return e.Msg
 }
 
-func (e DomainError) Unwrap() error {
+func (e AppError) Unwrap() error {
 	if e.Cause == nil {
 		return nil
 	}
@@ -34,16 +34,16 @@ func (e DomainError) Unwrap() error {
 	return e.Cause
 }
 
-func New(code int32, msg string) DomainError {
-	return DomainError{Code: code, Msg: msg}
+func New(code int32, msg string) AppError {
+	return AppError{Code: code, Msg: msg}
 }
 
-func From(code int32, msg string, err error) DomainError {
-	return DomainError{Code: code, Msg: msg, Cause: err}
+func From(code int32, msg string, err error) AppError {
+	return AppError{Code: code, Msg: msg, Cause: err}
 }
 
 func ToGRPCStatus(err error) error {
-	if domainErr, ok := errors.AsType[DomainError](err); ok {
+	if domainErr, ok := errors.AsType[AppError](err); ok {
 		switch domainErr.Code {
 		case CodeInvalidInput:
 			return status.Error(codes.InvalidArgument, domainErr.Msg)

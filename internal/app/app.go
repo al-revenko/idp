@@ -18,6 +18,9 @@ import (
 	"github.com/al-revenko/idp/internal/lib/crypt/rsa"
 	"github.com/al-revenko/idp/internal/lib/crypt/signer"
 	"github.com/al-revenko/idp/internal/lib/pkgmark"
+	usergrpc "github.com/al-revenko/idp/internal/user/grpc"
+	userservice "github.com/al-revenko/idp/internal/user/service"
+	userstore "github.com/al-revenko/idp/internal/user/store"
 	"github.com/jackc/pgx/v5"
 	"google.golang.org/grpc"
 )
@@ -158,4 +161,8 @@ func (a *App) servicesInit(conn *pgx.Conn, signer *signer.Signer, hasher *hash.A
 	clientStore := clientstore.New(conn)
 	clientService := clientservice.New(clientStore, hasher)
 	clientgrpc.Register(a.grpcServer, clientService)
+
+	userStore := userstore.New(conn)
+	userService := userservice.New(userStore, clientService, hasher)
+	usergrpc.Register(a.grpcServer, userService)
 }

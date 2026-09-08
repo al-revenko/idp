@@ -2,11 +2,12 @@ package interceptor
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 	"time"
 	"uuid"
 
-	"github.com/al-revenko/idp/internal/lib/derr"
+	"github.com/al-revenko/idp/internal/lib/apperr"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -60,11 +61,15 @@ func ErrorInterceptor(log *slog.Logger) grpc.UnaryServerInterceptor {
 			return resp, err
 		}
 
-		grpcErr := derr.ToGRPCStatus(err)
-
-		if status, _ := status.FromError(grpcErr); status.Code() == codes.Internal {
-			l.Error("internal error", slog.String("error", err.Error()))
+		if e, ok := errors.AsType[apperr.AppError](err); ok && e.Code == apperr.CodeInternal {
+			if e.Cause != nil {
+				l.Error("internal error", slog.String("error", e.Error()), slog.String("cause", e.Cause.Error()))
+			} else {
+				l.Error("internal error", slog.String("error", e.Error()))
+			}
 		}
+
+		grpcErr := apperr.ToGRPCStatus(err)
 
 		return resp, grpcErr
 	}
