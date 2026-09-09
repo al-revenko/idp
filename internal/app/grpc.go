@@ -1,4 +1,4 @@
-package grpc
+package app
 
 import (
 	"context"
@@ -16,7 +16,7 @@ type Server struct {
 	service ServiceProvider
 }
 
-func Register(grpc *grpc.Server, service ServiceProvider) {
+func RegisterGRPC(grpc *grpc.Server, service ServiceProvider) {
 	idpv1.RegisterAppServiceServer(grpc, &Server{service: service})
 }
 

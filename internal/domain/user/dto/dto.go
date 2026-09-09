@@ -1,4 +1,4 @@
-package grpc
+package dto
 
 type UserRegisterRequest struct {
 	Username string `validate:"required,max=50,alphanum"`

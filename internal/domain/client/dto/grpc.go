@@ -1,4 +1,4 @@
-package grpc
+package dto
 
 type ClientRegisterRequest struct {
 	Name string `validate:"required,min=3,max=255"`

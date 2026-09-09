@@ -1,48 +1,35 @@
-package service
+package client
 
 import (
 	"context"
 
-	cl "github.com/al-revenko/idp/internal/client"
-	"github.com/al-revenko/idp/internal/lib/apperr"
+	"github.com/al-revenko/idp/internal/domain"
 	"github.com/al-revenko/idp/internal/lib/crypt"
-	"github.com/al-revenko/idp/internal/lib/pkgmark"
 )
-
-var pkg = pkgmark.New("client/service")
 
 type HashProvider interface {
 	Create(str string) (string, error)
 	Compare(str, hash string) (bool, error)
 }
 
-type Store interface {
-	CreateClient(ctx context.Context, name, secretHash string) (string, error)
-	GetClientById(ctx context.Context, id string) (cl.ClientWithSecretHash, error)
-	DeleteClient(ctx context.Context, id string) error
-}
-
 type Service struct {
-	store Store
+	store *Store
 	hash  HashProvider
 }
 
-func New(store Store, hash HashProvider) *Service {
-	return &Service{
-		store: store,
-		hash:  hash,
-	}
+func NewService(store *Store, hash HashProvider) *Service {
+	return &Service{store: store, hash: hash}
 }
 
-func (s *Service) GetClientById(ctx context.Context, clientId string) (cl.Client, error) {
+func (s *Service) GetClientById(ctx context.Context, clientId string) (domain.Client, error) {
 	op := pkg.Op("Service.GetClientById")
 
 	client, err := s.store.GetClientById(ctx, clientId)
 	if err != nil {
-		return cl.Client{}, op.Err(err)
+		return domain.Client{}, op.Err(err)
 	}
 
-	return cl.Client{ID: client.ID, Name: client.Name}, nil
+	return domain.Client{ID: client.ID, Name: client.Name}, nil
 }
 
 func (s *Service) RegisterClient(ctx context.Context, name string) (clientId, clientSecret string, err error) {
@@ -79,7 +66,7 @@ func (s *Service) DeleteClient(ctx context.Context, clientId, clientSecret strin
 		return op.Err(err)
 	}
 	if !isValidToken {
-		return op.Err(apperr.New(apperr.CodeUnauthorized, "invalid token"))
+		return op.Err(domain.Error(domain.CodeUnauthorized, "invalid token", nil))
 	}
 
 	err = s.store.DeleteClient(ctx, clientId)

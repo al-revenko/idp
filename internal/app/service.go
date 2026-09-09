@@ -1,14 +1,10 @@
-package service
+package app
 
 import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
-
-	"github.com/al-revenko/idp/internal/lib/pkgmark"
 )
-
-var pkg = pkgmark.New("app/service")
 
 type PubKeyProvider interface {
 	PubKey() *rsa.PublicKey
@@ -18,7 +14,7 @@ type Service struct {
 	keysProvider PubKeyProvider
 }
 
-func New(keyProvider PubKeyProvider) *Service {
+func NewService(keyProvider PubKeyProvider) *Service {
 	return &Service{
 		keysProvider: keyProvider,
 	}

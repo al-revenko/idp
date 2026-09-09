@@ -1,23 +1,13 @@
-package service
+package user
 
 import (
 	"context"
 
-	"github.com/al-revenko/idp/internal/client"
-	"github.com/al-revenko/idp/internal/lib/apperr"
-	"github.com/al-revenko/idp/internal/lib/pkgmark"
-	"github.com/al-revenko/idp/internal/user"
+	"github.com/al-revenko/idp/internal/domain"
 )
 
-var pkg = pkgmark.New("user/service")
-
-type UserStore interface {
-	CreateUser(ctx context.Context, username, passwordHash string) (string, error)
-	GetUserByUsername(ctx context.Context, username string) (user.UserWithPasswordHash, error)
-}
-
 type ClientProvider interface {
-	GetClientById(ctx context.Context, clientId string) (client.Client, error)
+	GetClientById(ctx context.Context, clientId string) (domain.Client, error)
 }
 
 type HashProvider interface {
@@ -26,13 +16,13 @@ type HashProvider interface {
 }
 
 type Service struct {
-	store  UserStore
+	store  *Store
 	client ClientProvider
 	hash   HashProvider
 }
 
-func New(store UserStore, client ClientProvider, h HashProvider) *Service {
-	return &Service{store: store, client: client, hash: h}
+func NewService(store *Store, client ClientProvider, hash HashProvider) *Service {
+	return &Service{store: store, client: client, hash: hash}
 }
 
 func (s *Service) RegisterUser(ctx context.Context, username, password string) (userId string, err error) {
@@ -61,7 +51,7 @@ func (s *Service) LoginUser(ctx context.Context, username, password, clientID st
 
 	u, err := s.store.GetUserByUsername(ctx, username)
 	if err != nil {
-		return "", "", op.Err(apperr.From(apperr.CodeNotFound, "user not found", err))
+		return "", "", op.Err(domain.Error(domain.CodeNotFound, "user not found", err))
 	}
 
 	match, err := s.hash.Compare(password, u.PasswordHash)
@@ -69,7 +59,7 @@ func (s *Service) LoginUser(ctx context.Context, username, password, clientID st
 		return "", "", op.Err(err)
 	}
 	if !match {
-		return "", "", op.Err(apperr.From(apperr.CodeUnauthorized, "invalid password", nil))
+		return "", "", op.Err(domain.Error(domain.CodeUnauthorized, "invalid password", nil))
 	}
 
 	return "access_token", "refresh_token", nil

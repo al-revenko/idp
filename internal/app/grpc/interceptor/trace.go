@@ -2,12 +2,10 @@ package interceptor
 
 import (
 	"context"
-	"errors"
 	"log/slog"
 	"time"
 	"uuid"
 
-	"github.com/al-revenko/idp/internal/lib/apperr"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -28,13 +26,13 @@ func TraceInterceptor(log *slog.Logger) grpc.UnaryServerInterceptor {
 
 		l = l.With(slog.Int64("ms", time.Since(start).Milliseconds()))
 
-		status, ok := status.FromError(err)
-
 		if err == nil {
 			l.Info("RES", slog.String("status", "OK"), slog.Uint64("code", uint64(codes.OK)))
 		}
 
 		if err != nil {
+			status, ok := status.FromError(err)
+
 			if ok {
 				l.Info("RES", slog.String("status", status.Code().String()), slog.Uint64("code", uint64(status.Code())))
 			} else {
@@ -43,34 +41,5 @@ func TraceInterceptor(log *slog.Logger) grpc.UnaryServerInterceptor {
 		}
 
 		return resp, err
-	}
-}
-
-func ErrorInterceptor(log *slog.Logger) grpc.UnaryServerInterceptor {
-	return func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
-		reqId, ok := ctx.Value("reqId").(string)
-		if !ok {
-			reqId = "unknown"
-		}
-
-		l := log.With(slog.String("reqId", reqId))
-
-		resp, err := handler(ctx, req)
-
-		if err == nil {
-			return resp, err
-		}
-
-		if e, ok := errors.AsType[apperr.AppError](err); ok && e.Code == apperr.CodeInternal {
-			if e.Cause != nil {
-				l.Error("internal error", slog.String("error", e.Error()), slog.String("cause", e.Cause.Error()))
-			} else {
-				l.Error("internal error", slog.String("error", e.Error()))
-			}
-		}
-
-		grpcErr := apperr.ToGRPCStatus(err)
-
-		return resp, grpcErr
 	}
 }
