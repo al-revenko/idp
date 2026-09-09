@@ -4,49 +4,57 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
-	"encoding/base64"
+	"encoding/pem"
+	"errors"
 	"fmt"
+	"os"
 
-	"github.com/al-revenko/idp/internal/lib/pkgmark"
+	"github.com/al-revenko/idp/internal/lib/sign"
 )
 
-var pkg = pkgmark.New("crypt/rsa")
+var pkg = sign.Pkg("crypt/rsa")
 
-func GenerateKeyPair() (*rsa.PrivateKey, *rsa.PublicKey, error) {
+func GenerateKey() (*rsa.PrivateKey, error) {
 	op := pkg.Op("GenerateRSAKeyPair")
 
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
-		return nil, nil, op.Err(fmt.Errorf("Failed to generate RSA private key: %w", err))
+		return nil, op.Err(fmt.Errorf("Failed to generate RSA private key: %w", err))
 	}
 
-	publicKey := &privateKey.PublicKey
-
-	return privateKey, publicKey, nil
+	return privateKey, nil
 }
 
-func DecodeBase64Keys(privateKeyStr, publicKeyStr string) (*rsa.PrivateKey, *rsa.PublicKey, error) {
-	op := pkg.Op("DecodeBase64RSAKeys")
+func DecodePrivatePemFile(privateKeyPath string) (*rsa.PrivateKey, error) {
+	op := pkg.Op("DecodePrivatePemFile")
 
-	privateKeyBytes, err := base64.StdEncoding.DecodeString(privateKeyStr)
+	pemData, err := os.ReadFile(privateKeyPath)
 	if err != nil {
-		return nil, nil, op.Err(fmt.Errorf("decode private key: %w", err))
+		return nil, op.Err(fmt.Errorf("Failed to read private key file: %w", err))
 	}
 
-	publicKeyBytes, err := base64.StdEncoding.DecodeString(publicKeyStr)
-	if err != nil {
-		return nil, nil, op.Err(fmt.Errorf("decode public key: %w", err))
+	block, _ := pem.Decode(pemData)
+	if block == nil {
+		return nil, op.Err(errors.New("failed to parse PEM block"))
 	}
 
-	privateKey, err := x509.ParsePKCS1PrivateKey(privateKeyBytes)
-	if err != nil {
-		return nil, nil, op.Err(fmt.Errorf("parse private key: %w", err))
-	}
+	switch block.Type {
+	case "RSA PRIVATE KEY":
+		return x509.ParsePKCS1PrivateKey(block.Bytes)
 
-	publicKey, err := x509.ParsePKCS1PublicKey(publicKeyBytes)
-	if err != nil {
-		return nil, nil, op.Err(fmt.Errorf("parse public key: %w", err))
-	}
+	case "PRIVATE KEY":
+		key, err := x509.ParsePKCS8PrivateKey(block.Bytes)
+		if err != nil {
+			return nil, op.Err(fmt.Errorf("failed to parse PKCS#8 private key: %w", err))
+		}
 
-	return privateKey, publicKey, nil
+		rsaKey, ok := key.(*rsa.PrivateKey)
+		if !ok {
+			return nil, op.Err(errors.New("not an RSA private key"))
+		}
+		return rsaKey, nil
+
+	default:
+		return nil, op.Err(fmt.Errorf("unsupported key type: %s", block.Type))
+	}
 }

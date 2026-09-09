@@ -4,10 +4,10 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 
-	"github.com/al-revenko/idp/internal/lib/pkgmark"
+	"github.com/al-revenko/idp/internal/lib/sign"
 )
 
-var pkg = pkgmark.New("crypt")
+var pkg = sign.Pkg("crypt")
 
 func GenerateRandomBytes(size uint32) ([]byte, error) {
 	op := pkg.Op("GenerateRandomBytes")
@@ -20,10 +20,10 @@ func GenerateRandomBytes(size uint32) ([]byte, error) {
 	return bytes, nil
 }
 
-func GenerateOpagueToken() (string, error) {
+func GenerateOpagueToken(size uint32) (string, error) {
 	op := pkg.Op("GenerateOpagueToken")
 
-	secret, err := GenerateRandomBytes(32)
+	secret, err := GenerateRandomBytes(size)
 	if err != nil {
 		return "", op.Err(err)
 	}

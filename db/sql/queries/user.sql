@@ -7,3 +7,8 @@ RETURNING id;
 SELECT id, username, password_hash
 FROM "user"
 WHERE username = $1;
+
+-- name: GetUserById :one
+SELECT id, username, password_hash
+FROM "user"
+WHERE id = $1;

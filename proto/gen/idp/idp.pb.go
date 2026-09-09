@@ -21,26 +21,26 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type AppPublicKeyRequest struct {
+type PublicKeyRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AppPublicKeyRequest) Reset() {
-	*x = AppPublicKeyRequest{}
+func (x *PublicKeyRequest) Reset() {
+	*x = PublicKeyRequest{}
 	mi := &file_idp_idp_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AppPublicKeyRequest) String() string {
+func (x *PublicKeyRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AppPublicKeyRequest) ProtoMessage() {}
+func (*PublicKeyRequest) ProtoMessage() {}
 
-func (x *AppPublicKeyRequest) ProtoReflect() protoreflect.Message {
+func (x *PublicKeyRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_idp_idp_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -52,32 +52,32 @@ func (x *AppPublicKeyRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AppPublicKeyRequest.ProtoReflect.Descriptor instead.
-func (*AppPublicKeyRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use PublicKeyRequest.ProtoReflect.Descriptor instead.
+func (*PublicKeyRequest) Descriptor() ([]byte, []int) {
 	return file_idp_idp_proto_rawDescGZIP(), []int{0}
 }
 
-type AppPublicKeyResponse struct {
+type PublicKeyResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	RsaPubPem     []byte                 `protobuf:"bytes,1,opt,name=rsa_pub_pem,json=rsaPubPem,proto3" json:"rsa_pub_pem,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *AppPublicKeyResponse) Reset() {
-	*x = AppPublicKeyResponse{}
+func (x *PublicKeyResponse) Reset() {
+	*x = PublicKeyResponse{}
 	mi := &file_idp_idp_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *AppPublicKeyResponse) String() string {
+func (x *PublicKeyResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*AppPublicKeyResponse) ProtoMessage() {}
+func (*PublicKeyResponse) ProtoMessage() {}
 
-func (x *AppPublicKeyResponse) ProtoReflect() protoreflect.Message {
+func (x *PublicKeyResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_idp_idp_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -89,39 +89,39 @@ func (x *AppPublicKeyResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use AppPublicKeyResponse.ProtoReflect.Descriptor instead.
-func (*AppPublicKeyResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use PublicKeyResponse.ProtoReflect.Descriptor instead.
+func (*PublicKeyResponse) Descriptor() ([]byte, []int) {
 	return file_idp_idp_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *AppPublicKeyResponse) GetRsaPubPem() []byte {
+func (x *PublicKeyResponse) GetRsaPubPem() []byte {
 	if x != nil {
 		return x.RsaPubPem
 	}
 	return nil
 }
 
-type ClientRegisterRequest struct {
+type ClientCreateRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *ClientRegisterRequest) Reset() {
-	*x = ClientRegisterRequest{}
+func (x *ClientCreateRequest) Reset() {
+	*x = ClientCreateRequest{}
 	mi := &file_idp_idp_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ClientRegisterRequest) String() string {
+func (x *ClientCreateRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ClientRegisterRequest) ProtoMessage() {}
+func (*ClientCreateRequest) ProtoMessage() {}
 
-func (x *ClientRegisterRequest) ProtoReflect() protoreflect.Message {
+func (x *ClientCreateRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_idp_idp_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -133,19 +133,19 @@ func (x *ClientRegisterRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ClientRegisterRequest.ProtoReflect.Descriptor instead.
-func (*ClientRegisterRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use ClientCreateRequest.ProtoReflect.Descriptor instead.
+func (*ClientCreateRequest) Descriptor() ([]byte, []int) {
 	return file_idp_idp_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *ClientRegisterRequest) GetName() string {
+func (x *ClientCreateRequest) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-type ClientRegisterResponse struct {
+type ClientCreateResponse struct {
 	state             protoimpl.MessageState `protogen:"open.v1"`
 	ClientId          string                 `protobuf:"bytes,1,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
 	ClientSecretToken string                 `protobuf:"bytes,2,opt,name=client_secret_token,json=clientSecretToken,proto3" json:"client_secret_token,omitempty"`
@@ -153,20 +153,20 @@ type ClientRegisterResponse struct {
 	sizeCache         protoimpl.SizeCache
 }
 
-func (x *ClientRegisterResponse) Reset() {
-	*x = ClientRegisterResponse{}
+func (x *ClientCreateResponse) Reset() {
+	*x = ClientCreateResponse{}
 	mi := &file_idp_idp_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ClientRegisterResponse) String() string {
+func (x *ClientCreateResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ClientRegisterResponse) ProtoMessage() {}
+func (*ClientCreateResponse) ProtoMessage() {}
 
-func (x *ClientRegisterResponse) ProtoReflect() protoreflect.Message {
+func (x *ClientCreateResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_idp_idp_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -178,19 +178,19 @@ func (x *ClientRegisterResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ClientRegisterResponse.ProtoReflect.Descriptor instead.
-func (*ClientRegisterResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use ClientCreateResponse.ProtoReflect.Descriptor instead.
+func (*ClientCreateResponse) Descriptor() ([]byte, []int) {
 	return file_idp_idp_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *ClientRegisterResponse) GetClientId() string {
+func (x *ClientCreateResponse) GetClientId() string {
 	if x != nil {
 		return x.ClientId
 	}
 	return ""
 }
 
-func (x *ClientRegisterResponse) GetClientSecretToken() string {
+func (x *ClientCreateResponse) GetClientSecretToken() string {
 	if x != nil {
 		return x.ClientSecretToken
 	}
@@ -198,11 +198,10 @@ func (x *ClientRegisterResponse) GetClientSecretToken() string {
 }
 
 type ClientDeleteRequest struct {
-	state             protoimpl.MessageState `protogen:"open.v1"`
-	ClientId          string                 `protobuf:"bytes,1,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
-	ClientSecretToken string                 `protobuf:"bytes,2,opt,name=client_secret_token,json=clientSecretToken,proto3" json:"client_secret_token,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ClientId      string                 `protobuf:"bytes,1,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ClientDeleteRequest) Reset() {
@@ -238,13 +237,6 @@ func (*ClientDeleteRequest) Descriptor() ([]byte, []int) {
 func (x *ClientDeleteRequest) GetClientId() string {
 	if x != nil {
 		return x.ClientId
-	}
-	return ""
-}
-
-func (x *ClientDeleteRequest) GetClientSecretToken() string {
-	if x != nil {
-		return x.ClientSecretToken
 	}
 	return ""
 }
@@ -293,7 +285,7 @@ func (x *ClientDeleteResponse) GetSuccess() bool {
 	return false
 }
 
-type UserRegisterRequest struct {
+type RegisterRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
 	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
@@ -301,20 +293,20 @@ type UserRegisterRequest struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *UserRegisterRequest) Reset() {
-	*x = UserRegisterRequest{}
+func (x *RegisterRequest) Reset() {
+	*x = RegisterRequest{}
 	mi := &file_idp_idp_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UserRegisterRequest) String() string {
+func (x *RegisterRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UserRegisterRequest) ProtoMessage() {}
+func (*RegisterRequest) ProtoMessage() {}
 
-func (x *UserRegisterRequest) ProtoReflect() protoreflect.Message {
+func (x *RegisterRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_idp_idp_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -326,46 +318,46 @@ func (x *UserRegisterRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UserRegisterRequest.ProtoReflect.Descriptor instead.
-func (*UserRegisterRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use RegisterRequest.ProtoReflect.Descriptor instead.
+func (*RegisterRequest) Descriptor() ([]byte, []int) {
 	return file_idp_idp_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *UserRegisterRequest) GetUsername() string {
+func (x *RegisterRequest) GetUsername() string {
 	if x != nil {
 		return x.Username
 	}
 	return ""
 }
 
-func (x *UserRegisterRequest) GetPassword() string {
+func (x *RegisterRequest) GetPassword() string {
 	if x != nil {
 		return x.Password
 	}
 	return ""
 }
 
-type UserRegisterResponse struct {
+type RegisterResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *UserRegisterResponse) Reset() {
-	*x = UserRegisterResponse{}
+func (x *RegisterResponse) Reset() {
+	*x = RegisterResponse{}
 	mi := &file_idp_idp_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UserRegisterResponse) String() string {
+func (x *RegisterResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UserRegisterResponse) ProtoMessage() {}
+func (*RegisterResponse) ProtoMessage() {}
 
-func (x *UserRegisterResponse) ProtoReflect() protoreflect.Message {
+func (x *RegisterResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_idp_idp_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -377,41 +369,40 @@ func (x *UserRegisterResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UserRegisterResponse.ProtoReflect.Descriptor instead.
-func (*UserRegisterResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use RegisterResponse.ProtoReflect.Descriptor instead.
+func (*RegisterResponse) Descriptor() ([]byte, []int) {
 	return file_idp_idp_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *UserRegisterResponse) GetUserId() string {
+func (x *RegisterResponse) GetUserId() string {
 	if x != nil {
 		return x.UserId
 	}
 	return ""
 }
 
-type UserLoginRequest struct {
+type LoginRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
 	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
-	ClientId      string                 `protobuf:"bytes,3,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *UserLoginRequest) Reset() {
-	*x = UserLoginRequest{}
+func (x *LoginRequest) Reset() {
+	*x = LoginRequest{}
 	mi := &file_idp_idp_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UserLoginRequest) String() string {
+func (x *LoginRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UserLoginRequest) ProtoMessage() {}
+func (*LoginRequest) ProtoMessage() {}
 
-func (x *UserLoginRequest) ProtoReflect() protoreflect.Message {
+func (x *LoginRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_idp_idp_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -423,33 +414,26 @@ func (x *UserLoginRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UserLoginRequest.ProtoReflect.Descriptor instead.
-func (*UserLoginRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use LoginRequest.ProtoReflect.Descriptor instead.
+func (*LoginRequest) Descriptor() ([]byte, []int) {
 	return file_idp_idp_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *UserLoginRequest) GetUsername() string {
+func (x *LoginRequest) GetUsername() string {
 	if x != nil {
 		return x.Username
 	}
 	return ""
 }
 
-func (x *UserLoginRequest) GetPassword() string {
+func (x *LoginRequest) GetPassword() string {
 	if x != nil {
 		return x.Password
 	}
 	return ""
 }
 
-func (x *UserLoginRequest) GetClientId() string {
-	if x != nil {
-		return x.ClientId
-	}
-	return ""
-}
-
-type UserLoginResponse struct {
+type LoginResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	AccessToken   string                 `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
 	RefreshToken  string                 `protobuf:"bytes,2,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
@@ -457,20 +441,20 @@ type UserLoginResponse struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *UserLoginResponse) Reset() {
-	*x = UserLoginResponse{}
+func (x *LoginResponse) Reset() {
+	*x = LoginResponse{}
 	mi := &file_idp_idp_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UserLoginResponse) String() string {
+func (x *LoginResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UserLoginResponse) ProtoMessage() {}
+func (*LoginResponse) ProtoMessage() {}
 
-func (x *UserLoginResponse) ProtoReflect() protoreflect.Message {
+func (x *LoginResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_idp_idp_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -482,46 +466,46 @@ func (x *UserLoginResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UserLoginResponse.ProtoReflect.Descriptor instead.
-func (*UserLoginResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use LoginResponse.ProtoReflect.Descriptor instead.
+func (*LoginResponse) Descriptor() ([]byte, []int) {
 	return file_idp_idp_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *UserLoginResponse) GetAccessToken() string {
+func (x *LoginResponse) GetAccessToken() string {
 	if x != nil {
 		return x.AccessToken
 	}
 	return ""
 }
 
-func (x *UserLoginResponse) GetRefreshToken() string {
+func (x *LoginResponse) GetRefreshToken() string {
 	if x != nil {
 		return x.RefreshToken
 	}
 	return ""
 }
 
-type UserLogoutRequest struct {
+type LogoutRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	RefreshToken  string                 `protobuf:"bytes,1,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *UserLogoutRequest) Reset() {
-	*x = UserLogoutRequest{}
+func (x *LogoutRequest) Reset() {
+	*x = LogoutRequest{}
 	mi := &file_idp_idp_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UserLogoutRequest) String() string {
+func (x *LogoutRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UserLogoutRequest) ProtoMessage() {}
+func (*LogoutRequest) ProtoMessage() {}
 
-func (x *UserLogoutRequest) ProtoReflect() protoreflect.Message {
+func (x *LogoutRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_idp_idp_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -533,39 +517,38 @@ func (x *UserLogoutRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UserLogoutRequest.ProtoReflect.Descriptor instead.
-func (*UserLogoutRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use LogoutRequest.ProtoReflect.Descriptor instead.
+func (*LogoutRequest) Descriptor() ([]byte, []int) {
 	return file_idp_idp_proto_rawDescGZIP(), []int{10}
 }
 
-func (x *UserLogoutRequest) GetRefreshToken() string {
+func (x *LogoutRequest) GetRefreshToken() string {
 	if x != nil {
 		return x.RefreshToken
 	}
 	return ""
 }
 
-type UserLogoutResponse struct {
+type LogoutResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *UserLogoutResponse) Reset() {
-	*x = UserLogoutResponse{}
+func (x *LogoutResponse) Reset() {
+	*x = LogoutResponse{}
 	mi := &file_idp_idp_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *UserLogoutResponse) String() string {
+func (x *LogoutResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UserLogoutResponse) ProtoMessage() {}
+func (*LogoutResponse) ProtoMessage() {}
 
-func (x *UserLogoutResponse) ProtoReflect() protoreflect.Message {
+func (x *LogoutResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_idp_idp_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -577,63 +560,152 @@ func (x *UserLogoutResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UserLogoutResponse.ProtoReflect.Descriptor instead.
-func (*UserLogoutResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use LogoutResponse.ProtoReflect.Descriptor instead.
+func (*LogoutResponse) Descriptor() ([]byte, []int) {
 	return file_idp_idp_proto_rawDescGZIP(), []int{11}
 }
 
-func (x *UserLogoutResponse) GetSuccess() bool {
+type RefreshTokenRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RefreshToken  string                 `protobuf:"bytes,1,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RefreshTokenRequest) Reset() {
+	*x = RefreshTokenRequest{}
+	mi := &file_idp_idp_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RefreshTokenRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RefreshTokenRequest) ProtoMessage() {}
+
+func (x *RefreshTokenRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_idp_idp_proto_msgTypes[12]
 	if x != nil {
-		return x.Success
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
 	}
-	return false
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RefreshTokenRequest.ProtoReflect.Descriptor instead.
+func (*RefreshTokenRequest) Descriptor() ([]byte, []int) {
+	return file_idp_idp_proto_rawDescGZIP(), []int{12}
+}
+
+func (x *RefreshTokenRequest) GetRefreshToken() string {
+	if x != nil {
+		return x.RefreshToken
+	}
+	return ""
+}
+
+type RefreshTokenResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	AccessToken   string                 `protobuf:"bytes,1,opt,name=access_token,json=accessToken,proto3" json:"access_token,omitempty"`
+	RefreshToken  string                 `protobuf:"bytes,2,opt,name=refresh_token,json=refreshToken,proto3" json:"refresh_token,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RefreshTokenResponse) Reset() {
+	*x = RefreshTokenResponse{}
+	mi := &file_idp_idp_proto_msgTypes[13]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RefreshTokenResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RefreshTokenResponse) ProtoMessage() {}
+
+func (x *RefreshTokenResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_idp_idp_proto_msgTypes[13]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RefreshTokenResponse.ProtoReflect.Descriptor instead.
+func (*RefreshTokenResponse) Descriptor() ([]byte, []int) {
+	return file_idp_idp_proto_rawDescGZIP(), []int{13}
+}
+
+func (x *RefreshTokenResponse) GetAccessToken() string {
+	if x != nil {
+		return x.AccessToken
+	}
+	return ""
+}
+
+func (x *RefreshTokenResponse) GetRefreshToken() string {
+	if x != nil {
+		return x.RefreshToken
+	}
+	return ""
 }
 
 var File_idp_idp_proto protoreflect.FileDescriptor
 
 const file_idp_idp_proto_rawDesc = "" +
 	"\n" +
-	"\ridp/idp.proto\x12\x03idp\"\x15\n" +
-	"\x13AppPublicKeyRequest\"6\n" +
-	"\x14AppPublicKeyResponse\x12\x1e\n" +
-	"\vrsa_pub_pem\x18\x01 \x01(\fR\trsaPubPem\"+\n" +
-	"\x15ClientRegisterRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\"e\n" +
-	"\x16ClientRegisterResponse\x12\x1b\n" +
+	"\ridp/idp.proto\x12\x03idp\"\x12\n" +
+	"\x10PublicKeyRequest\"3\n" +
+	"\x11PublicKeyResponse\x12\x1e\n" +
+	"\vrsa_pub_pem\x18\x01 \x01(\fR\trsaPubPem\")\n" +
+	"\x13ClientCreateRequest\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\"c\n" +
+	"\x14ClientCreateResponse\x12\x1b\n" +
 	"\tclient_id\x18\x01 \x01(\tR\bclientId\x12.\n" +
-	"\x13client_secret_token\x18\x02 \x01(\tR\x11clientSecretToken\"b\n" +
+	"\x13client_secret_token\x18\x02 \x01(\tR\x11clientSecretToken\"2\n" +
 	"\x13ClientDeleteRequest\x12\x1b\n" +
-	"\tclient_id\x18\x01 \x01(\tR\bclientId\x12.\n" +
-	"\x13client_secret_token\x18\x02 \x01(\tR\x11clientSecretToken\"0\n" +
+	"\tclient_id\x18\x01 \x01(\tR\bclientId\"0\n" +
 	"\x14ClientDeleteResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\"M\n" +
-	"\x13UserRegisterRequest\x12\x1a\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\"I\n" +
+	"\x0fRegisterRequest\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\"/\n" +
-	"\x14UserRegisterResponse\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\tR\x06userId\"g\n" +
-	"\x10UserLoginRequest\x12\x1a\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\"+\n" +
+	"\x10RegisterResponse\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\"F\n" +
+	"\fLoginRequest\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\x12\x1b\n" +
-	"\tclient_id\x18\x03 \x01(\tR\bclientId\"[\n" +
-	"\x11UserLoginResponse\x12!\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\"W\n" +
+	"\rLoginResponse\x12!\n" +
 	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x12#\n" +
-	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken\"8\n" +
-	"\x11UserLogoutRequest\x12#\n" +
-	"\rrefresh_token\x18\x01 \x01(\tR\frefreshToken\".\n" +
-	"\x12UserLogoutResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess2Q\n" +
-	"\n" +
-	"AppService\x12C\n" +
-	"\fAppPublicKey\x12\x18.idp.AppPublicKeyRequest\x1a\x19.idp.AppPublicKeyResponse2\x9f\x01\n" +
-	"\rClientService\x12I\n" +
-	"\x0eClientRegister\x12\x1a.idp.ClientRegisterRequest\x1a\x1b.idp.ClientRegisterResponse\x12C\n" +
-	"\fClientDelete\x12\x18.idp.ClientDeleteRequest\x1a\x19.idp.ClientDeleteResponse2\xcd\x01\n" +
-	"\vUserService\x12C\n" +
-	"\fUserRegister\x12\x18.idp.UserRegisterRequest\x1a\x19.idp.UserRegisterResponse\x12:\n" +
-	"\tUserLogin\x12\x15.idp.UserLoginRequest\x1a\x16.idp.UserLoginResponse\x12=\n" +
-	"\n" +
-	"UserLogout\x12\x16.idp.UserLogoutRequest\x1a\x17.idp.UserLogoutResponseB\x16Z\x14revenko.idp.v1;idpv1b\x06proto3"
+	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken\"4\n" +
+	"\rLogoutRequest\x12#\n" +
+	"\rrefresh_token\x18\x01 \x01(\tR\frefreshToken\"\x10\n" +
+	"\x0eLogoutResponse\":\n" +
+	"\x13RefreshTokenRequest\x12#\n" +
+	"\rrefresh_token\x18\x01 \x01(\tR\frefreshToken\"^\n" +
+	"\x14RefreshTokenResponse\x12!\n" +
+	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x12#\n" +
+	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken2\xaa\x02\n" +
+	"\vAuthService\x12:\n" +
+	"\tPublicKey\x12\x15.idp.PublicKeyRequest\x1a\x16.idp.PublicKeyResponse\x127\n" +
+	"\bRegister\x12\x14.idp.RegisterRequest\x1a\x15.idp.RegisterResponse\x12.\n" +
+	"\x05Login\x12\x11.idp.LoginRequest\x1a\x12.idp.LoginResponse\x121\n" +
+	"\x06Logout\x12\x12.idp.LogoutRequest\x1a\x13.idp.LogoutResponse\x12C\n" +
+	"\fRefreshToken\x12\x18.idp.RefreshTokenRequest\x1a\x19.idp.RefreshTokenResponse2\x99\x01\n" +
+	"\rClientService\x12C\n" +
+	"\fClientCreate\x12\x18.idp.ClientCreateRequest\x1a\x19.idp.ClientCreateResponse\x12C\n" +
+	"\fClientDelete\x12\x18.idp.ClientDeleteRequest\x1a\x19.idp.ClientDeleteResponseB\x16Z\x14revenko.idp.v1;idpv1b\x06proto3"
 
 var (
 	file_idp_idp_proto_rawDescOnce sync.Once
@@ -647,36 +719,40 @@ func file_idp_idp_proto_rawDescGZIP() []byte {
 	return file_idp_idp_proto_rawDescData
 }
 
-var file_idp_idp_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_idp_idp_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
 var file_idp_idp_proto_goTypes = []any{
-	(*AppPublicKeyRequest)(nil),    // 0: idp.AppPublicKeyRequest
-	(*AppPublicKeyResponse)(nil),   // 1: idp.AppPublicKeyResponse
-	(*ClientRegisterRequest)(nil),  // 2: idp.ClientRegisterRequest
-	(*ClientRegisterResponse)(nil), // 3: idp.ClientRegisterResponse
-	(*ClientDeleteRequest)(nil),    // 4: idp.ClientDeleteRequest
-	(*ClientDeleteResponse)(nil),   // 5: idp.ClientDeleteResponse
-	(*UserRegisterRequest)(nil),    // 6: idp.UserRegisterRequest
-	(*UserRegisterResponse)(nil),   // 7: idp.UserRegisterResponse
-	(*UserLoginRequest)(nil),       // 8: idp.UserLoginRequest
-	(*UserLoginResponse)(nil),      // 9: idp.UserLoginResponse
-	(*UserLogoutRequest)(nil),      // 10: idp.UserLogoutRequest
-	(*UserLogoutResponse)(nil),     // 11: idp.UserLogoutResponse
+	(*PublicKeyRequest)(nil),     // 0: idp.PublicKeyRequest
+	(*PublicKeyResponse)(nil),    // 1: idp.PublicKeyResponse
+	(*ClientCreateRequest)(nil),  // 2: idp.ClientCreateRequest
+	(*ClientCreateResponse)(nil), // 3: idp.ClientCreateResponse
+	(*ClientDeleteRequest)(nil),  // 4: idp.ClientDeleteRequest
+	(*ClientDeleteResponse)(nil), // 5: idp.ClientDeleteResponse
+	(*RegisterRequest)(nil),      // 6: idp.RegisterRequest
+	(*RegisterResponse)(nil),     // 7: idp.RegisterResponse
+	(*LoginRequest)(nil),         // 8: idp.LoginRequest
+	(*LoginResponse)(nil),        // 9: idp.LoginResponse
+	(*LogoutRequest)(nil),        // 10: idp.LogoutRequest
+	(*LogoutResponse)(nil),       // 11: idp.LogoutResponse
+	(*RefreshTokenRequest)(nil),  // 12: idp.RefreshTokenRequest
+	(*RefreshTokenResponse)(nil), // 13: idp.RefreshTokenResponse
 }
 var file_idp_idp_proto_depIdxs = []int32{
-	0,  // 0: idp.AppService.AppPublicKey:input_type -> idp.AppPublicKeyRequest
-	2,  // 1: idp.ClientService.ClientRegister:input_type -> idp.ClientRegisterRequest
-	4,  // 2: idp.ClientService.ClientDelete:input_type -> idp.ClientDeleteRequest
-	6,  // 3: idp.UserService.UserRegister:input_type -> idp.UserRegisterRequest
-	8,  // 4: idp.UserService.UserLogin:input_type -> idp.UserLoginRequest
-	10, // 5: idp.UserService.UserLogout:input_type -> idp.UserLogoutRequest
-	1,  // 6: idp.AppService.AppPublicKey:output_type -> idp.AppPublicKeyResponse
-	3,  // 7: idp.ClientService.ClientRegister:output_type -> idp.ClientRegisterResponse
-	5,  // 8: idp.ClientService.ClientDelete:output_type -> idp.ClientDeleteResponse
-	7,  // 9: idp.UserService.UserRegister:output_type -> idp.UserRegisterResponse
-	9,  // 10: idp.UserService.UserLogin:output_type -> idp.UserLoginResponse
-	11, // 11: idp.UserService.UserLogout:output_type -> idp.UserLogoutResponse
-	6,  // [6:12] is the sub-list for method output_type
-	0,  // [0:6] is the sub-list for method input_type
+	0,  // 0: idp.AuthService.PublicKey:input_type -> idp.PublicKeyRequest
+	6,  // 1: idp.AuthService.Register:input_type -> idp.RegisterRequest
+	8,  // 2: idp.AuthService.Login:input_type -> idp.LoginRequest
+	10, // 3: idp.AuthService.Logout:input_type -> idp.LogoutRequest
+	12, // 4: idp.AuthService.RefreshToken:input_type -> idp.RefreshTokenRequest
+	2,  // 5: idp.ClientService.ClientCreate:input_type -> idp.ClientCreateRequest
+	4,  // 6: idp.ClientService.ClientDelete:input_type -> idp.ClientDeleteRequest
+	1,  // 7: idp.AuthService.PublicKey:output_type -> idp.PublicKeyResponse
+	7,  // 8: idp.AuthService.Register:output_type -> idp.RegisterResponse
+	9,  // 9: idp.AuthService.Login:output_type -> idp.LoginResponse
+	11, // 10: idp.AuthService.Logout:output_type -> idp.LogoutResponse
+	13, // 11: idp.AuthService.RefreshToken:output_type -> idp.RefreshTokenResponse
+	3,  // 12: idp.ClientService.ClientCreate:output_type -> idp.ClientCreateResponse
+	5,  // 13: idp.ClientService.ClientDelete:output_type -> idp.ClientDeleteResponse
+	7,  // [7:14] is the sub-list for method output_type
+	0,  // [0:7] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
 	0,  // [0:0] is the sub-list for extension extendee
 	0,  // [0:0] is the sub-list for field type_name
@@ -693,9 +769,9 @@ func file_idp_idp_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_idp_idp_proto_rawDesc), len(file_idp_idp_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   12,
+			NumMessages:   14,
 			NumExtensions: 0,
-			NumServices:   3,
+			NumServices:   2,
 		},
 		GoTypes:           file_idp_idp_proto_goTypes,
 		DependencyIndexes: file_idp_idp_proto_depIdxs,

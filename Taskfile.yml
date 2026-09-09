@@ -16,10 +16,10 @@ tasks:
       - go run ./cmd/idp/main.go
     silent: true
 
-  gen-rsa:
-    desc: "Generate RSA keys"
+  gen-pem:
+    desc: "Generate RSA key pem block"
     cmds:
-      - go run ./cmd/rsa-generator/main.go
+      - go run ./cmd/pem-generator/main.go {{.CLI_ARGS}}
     silent: true
 
   gen-proto:
@@ -37,7 +37,7 @@ tasks:
   migration-new:
     desc: "Generate new database migrations"
     cmds:
-      - goose create -dir={{.MIGRATION_DIR}} new sql
+      - goose create -dir={{.MIGRATION_DIR}} {{.CLI_ARGS | default "new"}} sql
     silent: true
 
   migration-up:

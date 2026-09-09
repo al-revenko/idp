@@ -2,54 +2,65 @@ package valid
 
 import (
 	"errors"
-	"fmt"
+	"strings"
 
-	"github.com/al-revenko/idp/internal/lib/apperr"
-	"github.com/al-revenko/idp/internal/lib/pkgmark"
+	"github.com/al-revenko/idp/internal/lib/sign"
 	"github.com/go-playground/validator/v10"
-	"github.com/iancoleman/strcase"
 )
 
-var pkg = pkgmark.New("lib/valid")
+var pkg = sign.Pkg("lib/valid")
 
-var validate = validator.New()
+type Valid struct {
+	validate *validator.Validate
+}
 
-func RequestDTO(s any) error {
-	op := pkg.Op("RequestDTO")
+func New() *Valid {
+	v := validator.New()
 
-	if s == nil {
-		return op.Err(apperr.New(apperr.CodeInternal, "nil passed instead of struct"))
-	}
+	v.RegisterValidation("password", tagPassword)
 
-	err := validate.Struct(s)
+	return &Valid{validate: v}
+}
+
+func (v *Valid) Struct(s any) error {
+	op := pkg.Op("Struct")
+
+	err := v.validate.Struct(s)
 	if err == nil {
 		return nil
 	}
 
 	var ve validator.ValidationErrors
 	if errors.As(err, &ve) {
-		ferrs := make([]error, len(ve))
-		for i, fe := range ve {
-			field := strcase.ToSnake(fe.Field())
-			endOfmsg := "; "
-
-			if len(ve) == 1 || i == len(ve)-1 {
-				endOfmsg = ""
-			}
-
-			if fe.Tag() == "required" {
-				ferrs[i] = fmt.Errorf("%s: %s%s", field, fe.Tag(), endOfmsg)
-			} else if fe.Param() != "" {
-				ferrs[i] = fmt.Errorf("%s: should be %s=%s%s", field, fe.Tag(), fe.Param(), endOfmsg)
-			} else {
-				ferrs[i] = fmt.Errorf("%s: should be %s%s", field, fe.Tag(), endOfmsg)
-			}
-		}
-
-		out := errors.Join(ferrs...)
-
-		return op.Err(apperr.From(apperr.CodeInvalidInput, out.Error(), out))
+		return op.Err(ValidationError{cause: ve})
 	}
 
-	return op.Err(apperr.From(apperr.CodeInternal, err.Error(), err))
+	return op.Err(ValidationError{cause: err})
+}
+
+func tagPassword(fl validator.FieldLevel) bool {
+	password := fl.Field().String()
+
+	if len(password) < 8 {
+		return false
+	}
+
+	var hasLower, hasUpper, hasDigit, hasSpecial bool
+
+	for _, char := range password {
+		switch {
+		case char >= 'a' && char <= 'z':
+			hasLower = true
+		case char >= 'A' && char <= 'Z':
+			hasUpper = true
+		case char >= '0' && char <= '9':
+			hasDigit = true
+		case strings.ContainsRune("@$!%*?&", char):
+			hasSpecial = true
+		default:
+			return false
+		}
+	}
+
+	return hasLower && hasUpper && hasDigit && hasSpecial
 }
