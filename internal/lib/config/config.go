@@ -23,22 +23,24 @@ const (
 )
 
 type Config struct {
-	Env      string
-	TokenTTL time.Duration
-	Secrets  SecretsConfig
-	GRPC     GRPCConfig
-	Hash     HashConfig
+	AppName string
+	Env     string
+	Secrets SecretsConfig
+	GRPC    GRPCConfig
+}
+
+type GRPCConfig struct {
+	Addr    string
+	Timeout time.Duration
 }
 
 type SecretsConfig struct {
 	RSAPrivateBase64 string
 	RSAPublicBase64  string
 	DBString         string
-}
-
-type GRPCConfig struct {
-	Addr    string
-	Timeout time.Duration
+	AccessTokenTTL   time.Duration
+	RefreshTokenTTL  time.Duration
+	Hash             HashConfig
 }
 
 type HashConfig struct {
@@ -89,8 +91,13 @@ func getEnvFileName() string {
 func mapEnvToConfig() (Config, error) {
 	cfg := &Config{}
 
-	env := os.Getenv("ENV")
+	appName := os.Getenv("APP_NAME")
+	if appName == "" {
+		appName = defaultAppName
+	}
+	cfg.AppName = appName
 
+	env := os.Getenv("ENV")
 	switch env {
 	case EnvLocal:
 	case EnvDev:
@@ -98,20 +105,7 @@ func mapEnvToConfig() (Config, error) {
 	default:
 		return Config{}, fmt.Errorf(`"env" value must be: %s, %s or %s; Passed: %s`, EnvLocal, EnvDev, EnvProd, env)
 	}
-
 	cfg.Env = env
-
-	tokenTTL := os.Getenv("TOKEN_TTL")
-	if tokenTTL != "" {
-		duration, err := time.ParseDuration(tokenTTL)
-		if err != nil {
-			return Config{}, fmt.Errorf(`"TOKEN_TTL" env var must be a valid duration: %s`, err.Error())
-		}
-
-		cfg.TokenTTL = duration
-	} else {
-		cfg.TokenTTL = defaultTokenTTL
-	}
 
 	err := mapSecrets(cfg)
 	if err != nil {
@@ -123,36 +117,7 @@ func mapEnvToConfig() (Config, error) {
 		return Config{}, err
 	}
 
-	err = mapHash(cfg)
-	if err != nil {
-		return Config{}, err
-	}
-
 	return *cfg, nil
-}
-
-func mapSecrets(cfg *Config) error {
-	rsaPrivateBase64 := os.Getenv("RSA_PRIVATE_BASE64")
-	if rsaPrivateBase64 == "" {
-		return fmt.Errorf(`"RSA_PRIVATE_BASE64" env var is required`)
-	}
-
-	rsaPublicBase64 := os.Getenv("RSA_PUBLIC_BASE64")
-	if rsaPublicBase64 == "" {
-		return fmt.Errorf(`"RSA_PUBLIC_BASE64" env var is required`)
-	}
-
-	cfg.Secrets.RSAPrivateBase64 = rsaPrivateBase64
-	cfg.Secrets.RSAPublicBase64 = rsaPublicBase64
-
-	dbString := os.Getenv("DB_STRING")
-	if dbString == "" {
-		return fmt.Errorf(`"DB_STRING" env var is required`)
-	}
-
-	cfg.Secrets.DBString = dbString
-
-	return nil
 }
 
 func mapGRPC(cfg *Config) error {
@@ -178,61 +143,119 @@ func mapGRPC(cfg *Config) error {
 	return nil
 }
 
-func mapHash(cfg *Config) error {
-	hashMemory := os.Getenv("HASH_MEMORY")
-	if hashMemory != "" {
-		memory, err := strconv.Atoi(hashMemory)
-		if err != nil {
-			return fmt.Errorf(`"HASH_MEMORY" env var must be a valid integer: %s`, err.Error())
-		}
-		cfg.Hash.Memory = uint32(memory)
-	} else {
-		cfg.Hash.Memory = defaultHashMemory
+func mapSecrets(cfg *Config) error {
+	rsaPrivateBase64 := os.Getenv("RSA_PRIVATE_BASE64")
+	if rsaPrivateBase64 == "" {
+		return fmt.Errorf(`"RSA_PRIVATE_BASE64" env var is required`)
 	}
 
-	hashIterations := os.Getenv("HASH_ITERATIONS")
-	if hashIterations != "" {
-		iterations, err := strconv.Atoi(hashIterations)
-		if err != nil {
-			return fmt.Errorf(`"HASH_ITERATIONS" env var must be a valid integer: %s`, err.Error())
-		}
-		cfg.Hash.Iterations = uint32(iterations)
-	} else {
-		cfg.Hash.Iterations = defaultHashIterations
+	rsaPublicBase64 := os.Getenv("RSA_PUBLIC_BASE64")
+	if rsaPublicBase64 == "" {
+		return fmt.Errorf(`"RSA_PUBLIC_BASE64" env var is required`)
 	}
 
-	hashParallelism := os.Getenv("HASH_PARALLELISM")
-	if hashParallelism != "" {
-		parallelism, err := strconv.Atoi(hashParallelism)
-		if err != nil {
-			return fmt.Errorf(`"HASH_PARALLELISM" env var must be a valid integer: %s`, err.Error())
-		}
-		cfg.Hash.Parallelism = uint8(parallelism)
-	} else {
-		cfg.Hash.Parallelism = uint8(runtime.NumCPU())
+	cfg.Secrets.RSAPrivateBase64 = rsaPrivateBase64
+	cfg.Secrets.RSAPublicBase64 = rsaPublicBase64
+
+	dbString := os.Getenv("DB_STRING")
+	if dbString == "" {
+		return fmt.Errorf(`"DB_STRING" env var is required`)
 	}
 
-	hashKeyLength := os.Getenv("HASH_KEY_LENGTH")
-	if hashKeyLength != "" {
-		keyLength, err := strconv.Atoi(hashKeyLength)
-		if err != nil {
-			return fmt.Errorf(`"HASH_KEY_LENGTH" env var must be a valid integer: %s`, err.Error())
-		}
-		cfg.Hash.KeyLength = uint32(keyLength)
-	} else {
-		cfg.Hash.KeyLength = defaultHashKeyLength
+	cfg.Secrets.DBString = dbString
+
+	accessTokenTTL, err := parseDuration("ACCESS_TOKEN_TTL", nil)
+	if err != nil {
+		return err
 	}
 
-	hashSaltLength := os.Getenv("HASH_SALT_LENGTH")
-	if hashSaltLength != "" {
-		saltLength, err := strconv.Atoi(hashSaltLength)
-		if err != nil {
-			return fmt.Errorf(`"HASH_SALT_LENGTH" env var must be a valid integer: %s`, err.Error())
-		}
-		cfg.Hash.SaltLength = uint32(saltLength)
-	} else {
-		cfg.Hash.SaltLength = defaultHashSaltLength
+	cfg.Secrets.AccessTokenTTL = accessTokenTTL
+
+	refreshTokenTTL, err := parseDuration("REFRESH_TOKEN_TTL", nil)
+	if err != nil {
+		return err
+	}
+
+	cfg.Secrets.RefreshTokenTTL = refreshTokenTTL
+
+	err = mapHash(cfg)
+	if err != nil {
+		return err
 	}
 
 	return nil
+}
+
+func mapHash(cfg *Config) error {
+	hashMemory, err := parseUint(os.Getenv("HASH_MEMORY"), defaultHashMemory)
+	if err != nil {
+		return err
+	}
+	cfg.Secrets.Hash.Memory = uint32(hashMemory)
+
+	hashIterations, err := parseUint(os.Getenv("HASH_ITERATIONS"), defaultHashIterations)
+	if err != nil {
+		return err
+	}
+	cfg.Secrets.Hash.Iterations = uint32(hashIterations)
+
+	hashParallelism, err := parseUint(os.Getenv("HASH_PARALLELISM"), int64(runtime.NumCPU()))
+	if err != nil {
+		return err
+	}
+	cfg.Secrets.Hash.Parallelism = uint8(hashParallelism)
+
+	hashKeyLength, err := parseUint(os.Getenv("HASH_KEY_LENGTH"), defaultHashKeyLength)
+	if err != nil {
+		return err
+	}
+	cfg.Secrets.Hash.KeyLength = uint32(hashKeyLength)
+
+	hashSaltLength, err := parseUint(os.Getenv("HASH_SALT_LENGTH"), defaultHashSaltLength)
+	if err != nil {
+		return err
+	}
+	cfg.Secrets.Hash.SaltLength = uint32(hashSaltLength)
+
+	return nil
+}
+
+func parseDuration(envVar string, defaultDuration *time.Duration) (time.Duration, error) {
+	errMsg := `"%s" env var must be a valid duration: %s`
+
+	durationStr := os.Getenv(envVar)
+	if durationStr == "" {
+		if defaultDuration != nil {
+			return *defaultDuration, nil
+		}
+
+		return 0, fmt.Errorf(errMsg, envVar, `env empty`)
+	}
+
+	duration, err := time.ParseDuration(durationStr)
+	if err != nil {
+		return 0, fmt.Errorf(errMsg, envVar, err.Error())
+	}
+
+	return duration, nil
+}
+
+func parseUint(envVar string, defaultValue int64) (uint64, error) {
+	errMsg := `"%s" env var must be a valid integer: %s`
+
+	valueStr := os.Getenv(envVar)
+	if valueStr == "" {
+		if defaultValue >= 0 {
+			return uint64(defaultValue), nil
+		}
+
+		return 0, fmt.Errorf(errMsg, envVar, `env empty`)
+	}
+
+	value, err := strconv.ParseUint(valueStr, 10, 32)
+	if err != nil {
+		return 0, fmt.Errorf(errMsg, envVar, err.Error())
+	}
+
+	return value, nil
 }

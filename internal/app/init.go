@@ -40,8 +40,14 @@ func (a *App) srvsInit(dbconn *pgx.Conn, signer *signer.Signer, hasher *hash.Arg
 	clientService := client.NewService(clientStore, hasher)
 	client.RegisterGRPC(a.grpcServer, clientService)
 
+	userJwt := &user.JWTParams{
+		Signer:          signer,
+		Issuer:          a.config.AppName,
+		AccessTokenTTL:  a.config.Secrets.AccessTokenTTL,
+		RefreshTokenTTL: a.config.Secrets.RefreshTokenTTL,
+	}
 	userStore := user.NewStore(db)
-	userService := user.NewService(userStore, clientService, hasher)
+	userService := user.NewService(userJwt, userStore, clientService, hasher)
 	user.RegisterGRPC(a.grpcServer, userService)
 }
 
@@ -56,12 +62,12 @@ func (a *App) cryptInit() (*signer.Signer, *hash.Argon2, error) {
 	signer := signer.New(privRsa, pubRsa)
 
 	hasher := &hash.Argon2{
-		Memory:      uint32(a.config.Hash.Memory),
-		Iterations:  uint32(a.config.Hash.Iterations),
-		Parallelism: uint8(a.config.Hash.Parallelism),
-		KeyLength:   a.config.Hash.KeyLength,
+		Memory:      a.config.Secrets.Hash.Memory,
+		Iterations:  a.config.Secrets.Hash.Iterations,
+		Parallelism: a.config.Secrets.Hash.Parallelism,
+		KeyLength:   a.config.Secrets.Hash.KeyLength,
 		SaltGenerator: func() ([]byte, error) {
-			return crypt.GenerateRandomBytes(a.config.Hash.SaltLength)
+			return crypt.GenerateRandomBytes(a.config.Secrets.Hash.SaltLength)
 		},
 	}
 

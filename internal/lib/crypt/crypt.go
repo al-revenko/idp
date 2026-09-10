@@ -20,10 +20,10 @@ func GenerateRandomBytes(size uint32) ([]byte, error) {
 	return bytes, nil
 }
 
-func GenerateOpagueToken() (string, error) {
+func GenerateOpagueToken(size uint32) (string, error) {
 	op := pkg.Op("GenerateOpagueToken")
 
-	secret, err := GenerateRandomBytes(32)
+	secret, err := GenerateRandomBytes(size)
 	if err != nil {
 		return "", op.Err(err)
 	}

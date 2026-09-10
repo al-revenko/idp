@@ -35,7 +35,7 @@ func (s *Service) GetClientById(ctx context.Context, clientId string) (domain.Cl
 func (s *Service) RegisterClient(ctx context.Context, name string) (clientId, clientSecret string, err error) {
 	op := pkg.Op("Service.RegisterClient")
 
-	clientSecret, err = crypt.GenerateOpagueToken()
+	clientSecret, err = crypt.GenerateOpagueToken(32)
 	if err != nil {
 		return "", "", op.Err(err)
 	}
