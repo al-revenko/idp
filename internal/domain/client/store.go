@@ -33,11 +33,12 @@ func (s *Store) GetClientById(ctx context.Context, id string) (model.Client, err
 	return s.toDomainClient(c), nil
 }
 
-func (s *Store) CreateClient(ctx context.Context, name, secretHash string) (clientId string, err error) {
+func (s *Store) CreateClient(ctx context.Context, name, pubKeyUrl string) (clientId string, err error) {
 	op := pkg.Op("Store.CreateClient")
 
 	clientId, err = s.db.CreateClient(ctx, dbstore.CreateClientParams{
-		Name: name, SecretHash: secretHash,
+		Name:      name,
+		PubKeyUrl: pubKeyUrl,
 	})
 	if err != nil {
 		return "", op.Err(domain.Error(domain.CodeInternal, err.Error(), err))
@@ -59,8 +60,8 @@ func (s *Store) DeleteClient(ctx context.Context, id string) error {
 
 func (s *Store) toDomainClient(cdb dbstore.Client) model.Client {
 	return model.Client{
-		ID:         cdb.ID,
-		Name:       cdb.Name,
-		SecretHash: cdb.SecretHash,
+		ID:        cdb.ID,
+		Name:      cdb.Name,
+		PubKeyUrl: cdb.PubKeyUrl,
 	}
 }

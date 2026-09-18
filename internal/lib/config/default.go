@@ -4,7 +4,6 @@ import (
 	"time"
 )
 
-const defaultAppName = "IdP Service"
 const defaultConfigEnv = ".env.local"
 
 const defaultGRPCTimeout = 5 * time.Second

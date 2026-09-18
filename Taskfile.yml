@@ -16,6 +16,12 @@ tasks:
       - go run ./cmd/idp/main.go
     silent: true
 
+  tjwks:
+    desc: "Start JWKS mock server"
+    cmds:
+      - go run ./cmd/jwks-mock/main.go {{.CLI_ARGS}}
+    silent: true
+
   gen-pem:
     desc: "Generate RSA key pem block"
     cmds:
@@ -43,7 +49,7 @@ tasks:
   migration-up:
     desc: "Migrate the database to the latest version"
     cmds:
-      - goose -dir={{.MIGRATION_DIR}} postgres $DB_STRING up
+      - goose -dir={{.MIGRATION_DIR}} postgres $DB_CONN_STR up
     silent: true
 
   migration-down:

@@ -25,12 +25,12 @@ const (
 )
 
 type Config struct {
-	AppName string
-	Env     string
-	Crypt   CryptConfig
-	Auth    AuthConfig
-	Store   StoreConfig
-	GRPC    GRPCConfig
+	ServiceName string
+	Env         string
+	Crypt       CryptConfig
+	Auth        AuthConfig
+	Store       StoreConfig
+	GRPC        GRPCConfig
 }
 
 type GRPCConfig struct {
@@ -104,11 +104,11 @@ func getEnvFileName() string {
 func mapEnvToConfig() (Config, error) {
 	cfg := &Config{}
 
-	appName := os.Getenv("APP_NAME")
-	if appName == "" {
-		appName = defaultAppName
+	serviceName := os.Getenv("SERVICE_NAME")
+	if serviceName == "" {
+		return Config{}, fmt.Errorf(`"SERVICE_NAME" env var is required`)
 	}
-	cfg.AppName = appName
+	cfg.ServiceName = serviceName
 
 	env := os.Getenv("ENV")
 	switch env {
@@ -116,7 +116,7 @@ func mapEnvToConfig() (Config, error) {
 	case EnvDev:
 	case EnvProd:
 	default:
-		return Config{}, fmt.Errorf(`"env" value must be: %s, %s or %s; Passed: %s`, EnvLocal, EnvDev, EnvProd, env)
+		return Config{}, fmt.Errorf(`value of "ENV" var must be: %s, %s or %s; Passed: %s`, EnvLocal, EnvDev, EnvProd, env)
 	}
 	cfg.Env = env
 

@@ -37,7 +37,7 @@ func initApp(ctx context.Context, cfg *config.Config, grpcServer *grpc.Server, l
 	db := dbstore.New(dbconn)
 
 	clientStore := client.NewStore(db)
-	clientService := client.NewService(clientStore, argon2Hasher)
+	clientService := client.NewService(clientStore)
 
 	userStore := user.NewStore(db)
 	userService := user.NewService(userStore, argon2Hasher)
@@ -45,7 +45,7 @@ func initApp(ctx context.Context, cfg *config.Config, grpcServer *grpc.Server, l
 	authTokenParams := &auth.TokenParams{
 		Signer:                      rsaManager,
 		Hash:                        blake3Hasher,
-		Issuer:                      cfg.AppName,
+		Issuer:                      cfg.ServiceName,
 		AccessTokenTTL:              cfg.Auth.AccessTokenTTL,
 		RefreshTokenTTL:             cfg.Auth.RefreshTokenTTL,
 		RefreshTokenRevokedStoreTTL: cfg.Auth.RefreshTokenRevokedStoreTTL,
@@ -55,7 +55,16 @@ func initApp(ctx context.Context, cfg *config.Config, grpcServer *grpc.Server, l
 	authService := auth.NewService(authStore, clientService, userService, authTokenParams)
 
 	grpcServer = grpc.NewServer(
-		grpc.ChainUnaryInterceptor(interceptor.TraceInterceptor(log), interceptor.AuthInterceptor(clientService, PublicRPCs), interceptor.ErrorInterceptor(log)),
+		grpc.ChainUnaryInterceptor(
+			interceptor.TraceInterceptor(log),
+			interceptor.AuthInterceptor(interceptor.AuthInterceptorParams{
+				ClientService: clientService,
+				Validator:     validator,
+				ExpectedAud:   cfg.ServiceName,
+				PublicRPCs:    PublicRPCs,
+			}),
+			interceptor.ErrorInterceptor(log),
+		),
 	)
 	client.RegisterGRPC(grpcServer, clientService, validator)
 	auth.RegisterGRPC(grpcServer, authService, validator)

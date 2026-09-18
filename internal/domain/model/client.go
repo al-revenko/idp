@@ -1,7 +1,7 @@
 package model
 
 type Client struct {
-	ID         string
-	Name       string
-	SecretHash string
+	ID        string
+	Name      string
+	PubKeyUrl string
 }

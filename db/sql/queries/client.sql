@@ -3,7 +3,7 @@ SELECT * FROM client
 WHERE id = $1 LIMIT 1;
 
 -- name: CreateClient :one
-INSERT INTO client (name, secret_hash)
+INSERT INTO client (name, pub_key_url)
 VALUES ($1, $2)
 RETURNING id;
 

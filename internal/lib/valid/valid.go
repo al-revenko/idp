@@ -23,7 +23,7 @@ func New() *Valid {
 }
 
 func (v *Valid) Struct(s any) error {
-	op := pkg.Op("Struct")
+	op := pkg.Op("Valid.Struct")
 
 	err := v.validate.Struct(s)
 	if err == nil {
@@ -33,6 +33,17 @@ func (v *Valid) Struct(s any) error {
 	var ve validator.ValidationErrors
 	if errors.As(err, &ve) {
 		return op.Err(ValidationError{cause: ve})
+	}
+
+	return op.Err(ValidationError{cause: err})
+}
+
+func (v *Valid) UUID(s any) error {
+	op := pkg.Op("Valid.UUID")
+
+	err := v.validate.Var(s, "uuid")
+	if err == nil {
+		return nil
 	}
 
 	return op.Err(ValidationError{cause: err})

@@ -31,7 +31,6 @@ type UserProvider interface {
 
 type ClientProvider interface {
 	GetClientById(ctx context.Context, id string) (model.Client, error)
-	CreateClient(ctx context.Context, name string) (string, string, error)
 }
 
 type RsaSigner interface {

@@ -9,6 +9,7 @@ package idpv1
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -21,42 +22,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type PublicKeyRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *PublicKeyRequest) Reset() {
-	*x = PublicKeyRequest{}
-	mi := &file_idp_idp_proto_msgTypes[0]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PublicKeyRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PublicKeyRequest) ProtoMessage() {}
-
-func (x *PublicKeyRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_idp_idp_proto_msgTypes[0]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PublicKeyRequest.ProtoReflect.Descriptor instead.
-func (*PublicKeyRequest) Descriptor() ([]byte, []int) {
-	return file_idp_idp_proto_rawDescGZIP(), []int{0}
-}
-
 type PublicKeyResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	RsaPubPem     []byte                 `protobuf:"bytes,1,opt,name=rsa_pub_pem,json=rsaPubPem,proto3" json:"rsa_pub_pem,omitempty"`
@@ -66,7 +31,7 @@ type PublicKeyResponse struct {
 
 func (x *PublicKeyResponse) Reset() {
 	*x = PublicKeyResponse{}
-	mi := &file_idp_idp_proto_msgTypes[1]
+	mi := &file_idp_idp_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -78,7 +43,7 @@ func (x *PublicKeyResponse) String() string {
 func (*PublicKeyResponse) ProtoMessage() {}
 
 func (x *PublicKeyResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_idp_idp_proto_msgTypes[1]
+	mi := &file_idp_idp_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -91,7 +56,7 @@ func (x *PublicKeyResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PublicKeyResponse.ProtoReflect.Descriptor instead.
 func (*PublicKeyResponse) Descriptor() ([]byte, []int) {
-	return file_idp_idp_proto_rawDescGZIP(), []int{1}
+	return file_idp_idp_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *PublicKeyResponse) GetRsaPubPem() []byte {
@@ -104,13 +69,14 @@ func (x *PublicKeyResponse) GetRsaPubPem() []byte {
 type ClientCreateRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	JwksUrl       string                 `protobuf:"bytes,2,opt,name=jwks_url,json=jwksUrl,proto3" json:"jwks_url,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ClientCreateRequest) Reset() {
 	*x = ClientCreateRequest{}
-	mi := &file_idp_idp_proto_msgTypes[2]
+	mi := &file_idp_idp_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -122,7 +88,7 @@ func (x *ClientCreateRequest) String() string {
 func (*ClientCreateRequest) ProtoMessage() {}
 
 func (x *ClientCreateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_idp_idp_proto_msgTypes[2]
+	mi := &file_idp_idp_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -135,7 +101,7 @@ func (x *ClientCreateRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ClientCreateRequest.ProtoReflect.Descriptor instead.
 func (*ClientCreateRequest) Descriptor() ([]byte, []int) {
-	return file_idp_idp_proto_rawDescGZIP(), []int{2}
+	return file_idp_idp_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *ClientCreateRequest) GetName() string {
@@ -145,17 +111,23 @@ func (x *ClientCreateRequest) GetName() string {
 	return ""
 }
 
+func (x *ClientCreateRequest) GetJwksUrl() string {
+	if x != nil {
+		return x.JwksUrl
+	}
+	return ""
+}
+
 type ClientCreateResponse struct {
-	state             protoimpl.MessageState `protogen:"open.v1"`
-	ClientId          string                 `protobuf:"bytes,1,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
-	ClientSecretToken string                 `protobuf:"bytes,2,opt,name=client_secret_token,json=clientSecretToken,proto3" json:"client_secret_token,omitempty"`
-	unknownFields     protoimpl.UnknownFields
-	sizeCache         protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ClientId      string                 `protobuf:"bytes,1,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ClientCreateResponse) Reset() {
 	*x = ClientCreateResponse{}
-	mi := &file_idp_idp_proto_msgTypes[3]
+	mi := &file_idp_idp_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -167,7 +139,7 @@ func (x *ClientCreateResponse) String() string {
 func (*ClientCreateResponse) ProtoMessage() {}
 
 func (x *ClientCreateResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_idp_idp_proto_msgTypes[3]
+	mi := &file_idp_idp_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -180,7 +152,7 @@ func (x *ClientCreateResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ClientCreateResponse.ProtoReflect.Descriptor instead.
 func (*ClientCreateResponse) Descriptor() ([]byte, []int) {
-	return file_idp_idp_proto_rawDescGZIP(), []int{3}
+	return file_idp_idp_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *ClientCreateResponse) GetClientId() string {
@@ -188,101 +160,6 @@ func (x *ClientCreateResponse) GetClientId() string {
 		return x.ClientId
 	}
 	return ""
-}
-
-func (x *ClientCreateResponse) GetClientSecretToken() string {
-	if x != nil {
-		return x.ClientSecretToken
-	}
-	return ""
-}
-
-type ClientDeleteRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	ClientId      string                 `protobuf:"bytes,1,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ClientDeleteRequest) Reset() {
-	*x = ClientDeleteRequest{}
-	mi := &file_idp_idp_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ClientDeleteRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ClientDeleteRequest) ProtoMessage() {}
-
-func (x *ClientDeleteRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_idp_idp_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ClientDeleteRequest.ProtoReflect.Descriptor instead.
-func (*ClientDeleteRequest) Descriptor() ([]byte, []int) {
-	return file_idp_idp_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *ClientDeleteRequest) GetClientId() string {
-	if x != nil {
-		return x.ClientId
-	}
-	return ""
-}
-
-type ClientDeleteResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *ClientDeleteResponse) Reset() {
-	*x = ClientDeleteResponse{}
-	mi := &file_idp_idp_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *ClientDeleteResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ClientDeleteResponse) ProtoMessage() {}
-
-func (x *ClientDeleteResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_idp_idp_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ClientDeleteResponse.ProtoReflect.Descriptor instead.
-func (*ClientDeleteResponse) Descriptor() ([]byte, []int) {
-	return file_idp_idp_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *ClientDeleteResponse) GetSuccess() bool {
-	if x != nil {
-		return x.Success
-	}
-	return false
 }
 
 type RegisterRequest struct {
@@ -295,7 +172,7 @@ type RegisterRequest struct {
 
 func (x *RegisterRequest) Reset() {
 	*x = RegisterRequest{}
-	mi := &file_idp_idp_proto_msgTypes[6]
+	mi := &file_idp_idp_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -307,7 +184,7 @@ func (x *RegisterRequest) String() string {
 func (*RegisterRequest) ProtoMessage() {}
 
 func (x *RegisterRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_idp_idp_proto_msgTypes[6]
+	mi := &file_idp_idp_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -320,7 +197,7 @@ func (x *RegisterRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RegisterRequest.ProtoReflect.Descriptor instead.
 func (*RegisterRequest) Descriptor() ([]byte, []int) {
-	return file_idp_idp_proto_rawDescGZIP(), []int{6}
+	return file_idp_idp_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *RegisterRequest) GetUsername() string {
@@ -346,7 +223,7 @@ type RegisterResponse struct {
 
 func (x *RegisterResponse) Reset() {
 	*x = RegisterResponse{}
-	mi := &file_idp_idp_proto_msgTypes[7]
+	mi := &file_idp_idp_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -358,7 +235,7 @@ func (x *RegisterResponse) String() string {
 func (*RegisterResponse) ProtoMessage() {}
 
 func (x *RegisterResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_idp_idp_proto_msgTypes[7]
+	mi := &file_idp_idp_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -371,7 +248,7 @@ func (x *RegisterResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RegisterResponse.ProtoReflect.Descriptor instead.
 func (*RegisterResponse) Descriptor() ([]byte, []int) {
-	return file_idp_idp_proto_rawDescGZIP(), []int{7}
+	return file_idp_idp_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *RegisterResponse) GetUserId() string {
@@ -391,7 +268,7 @@ type LoginRequest struct {
 
 func (x *LoginRequest) Reset() {
 	*x = LoginRequest{}
-	mi := &file_idp_idp_proto_msgTypes[8]
+	mi := &file_idp_idp_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -403,7 +280,7 @@ func (x *LoginRequest) String() string {
 func (*LoginRequest) ProtoMessage() {}
 
 func (x *LoginRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_idp_idp_proto_msgTypes[8]
+	mi := &file_idp_idp_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -416,7 +293,7 @@ func (x *LoginRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginRequest.ProtoReflect.Descriptor instead.
 func (*LoginRequest) Descriptor() ([]byte, []int) {
-	return file_idp_idp_proto_rawDescGZIP(), []int{8}
+	return file_idp_idp_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *LoginRequest) GetUsername() string {
@@ -443,7 +320,7 @@ type LoginResponse struct {
 
 func (x *LoginResponse) Reset() {
 	*x = LoginResponse{}
-	mi := &file_idp_idp_proto_msgTypes[9]
+	mi := &file_idp_idp_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -455,7 +332,7 @@ func (x *LoginResponse) String() string {
 func (*LoginResponse) ProtoMessage() {}
 
 func (x *LoginResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_idp_idp_proto_msgTypes[9]
+	mi := &file_idp_idp_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -468,7 +345,7 @@ func (x *LoginResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginResponse.ProtoReflect.Descriptor instead.
 func (*LoginResponse) Descriptor() ([]byte, []int) {
-	return file_idp_idp_proto_rawDescGZIP(), []int{9}
+	return file_idp_idp_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *LoginResponse) GetAccessToken() string {
@@ -494,7 +371,7 @@ type LogoutRequest struct {
 
 func (x *LogoutRequest) Reset() {
 	*x = LogoutRequest{}
-	mi := &file_idp_idp_proto_msgTypes[10]
+	mi := &file_idp_idp_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -506,7 +383,7 @@ func (x *LogoutRequest) String() string {
 func (*LogoutRequest) ProtoMessage() {}
 
 func (x *LogoutRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_idp_idp_proto_msgTypes[10]
+	mi := &file_idp_idp_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -519,7 +396,7 @@ func (x *LogoutRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LogoutRequest.ProtoReflect.Descriptor instead.
 func (*LogoutRequest) Descriptor() ([]byte, []int) {
-	return file_idp_idp_proto_rawDescGZIP(), []int{10}
+	return file_idp_idp_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *LogoutRequest) GetRefreshToken() string {
@@ -527,42 +404,6 @@ func (x *LogoutRequest) GetRefreshToken() string {
 		return x.RefreshToken
 	}
 	return ""
-}
-
-type LogoutResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *LogoutResponse) Reset() {
-	*x = LogoutResponse{}
-	mi := &file_idp_idp_proto_msgTypes[11]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *LogoutResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*LogoutResponse) ProtoMessage() {}
-
-func (x *LogoutResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_idp_idp_proto_msgTypes[11]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use LogoutResponse.ProtoReflect.Descriptor instead.
-func (*LogoutResponse) Descriptor() ([]byte, []int) {
-	return file_idp_idp_proto_rawDescGZIP(), []int{11}
 }
 
 type RefreshTokenRequest struct {
@@ -574,7 +415,7 @@ type RefreshTokenRequest struct {
 
 func (x *RefreshTokenRequest) Reset() {
 	*x = RefreshTokenRequest{}
-	mi := &file_idp_idp_proto_msgTypes[12]
+	mi := &file_idp_idp_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -586,7 +427,7 @@ func (x *RefreshTokenRequest) String() string {
 func (*RefreshTokenRequest) ProtoMessage() {}
 
 func (x *RefreshTokenRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_idp_idp_proto_msgTypes[12]
+	mi := &file_idp_idp_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -599,7 +440,7 @@ func (x *RefreshTokenRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RefreshTokenRequest.ProtoReflect.Descriptor instead.
 func (*RefreshTokenRequest) Descriptor() ([]byte, []int) {
-	return file_idp_idp_proto_rawDescGZIP(), []int{12}
+	return file_idp_idp_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *RefreshTokenRequest) GetRefreshToken() string {
@@ -619,7 +460,7 @@ type RefreshTokenResponse struct {
 
 func (x *RefreshTokenResponse) Reset() {
 	*x = RefreshTokenResponse{}
-	mi := &file_idp_idp_proto_msgTypes[13]
+	mi := &file_idp_idp_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -631,7 +472,7 @@ func (x *RefreshTokenResponse) String() string {
 func (*RefreshTokenResponse) ProtoMessage() {}
 
 func (x *RefreshTokenResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_idp_idp_proto_msgTypes[13]
+	mi := &file_idp_idp_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -644,7 +485,7 @@ func (x *RefreshTokenResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RefreshTokenResponse.ProtoReflect.Descriptor instead.
 func (*RefreshTokenResponse) Descriptor() ([]byte, []int) {
-	return file_idp_idp_proto_rawDescGZIP(), []int{13}
+	return file_idp_idp_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *RefreshTokenResponse) GetAccessToken() string {
@@ -665,19 +506,14 @@ var File_idp_idp_proto protoreflect.FileDescriptor
 
 const file_idp_idp_proto_rawDesc = "" +
 	"\n" +
-	"\ridp/idp.proto\x12\x03idp\"\x12\n" +
-	"\x10PublicKeyRequest\"3\n" +
+	"\ridp/idp.proto\x12\x03idp\x1a\x1bgoogle/protobuf/empty.proto\"3\n" +
 	"\x11PublicKeyResponse\x12\x1e\n" +
-	"\vrsa_pub_pem\x18\x01 \x01(\fR\trsaPubPem\")\n" +
+	"\vrsa_pub_pem\x18\x01 \x01(\fR\trsaPubPem\"D\n" +
 	"\x13ClientCreateRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\"c\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x19\n" +
+	"\bjwks_url\x18\x02 \x01(\tR\ajwksUrl\"3\n" +
 	"\x14ClientCreateResponse\x12\x1b\n" +
-	"\tclient_id\x18\x01 \x01(\tR\bclientId\x12.\n" +
-	"\x13client_secret_token\x18\x02 \x01(\tR\x11clientSecretToken\"2\n" +
-	"\x13ClientDeleteRequest\x12\x1b\n" +
-	"\tclient_id\x18\x01 \x01(\tR\bclientId\"0\n" +
-	"\x14ClientDeleteResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\"I\n" +
+	"\tclient_id\x18\x01 \x01(\tR\bclientId\"I\n" +
 	"\x0fRegisterRequest\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\"+\n" +
@@ -690,22 +526,21 @@ const file_idp_idp_proto_rawDesc = "" +
 	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x12#\n" +
 	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken\"4\n" +
 	"\rLogoutRequest\x12#\n" +
-	"\rrefresh_token\x18\x01 \x01(\tR\frefreshToken\"\x10\n" +
-	"\x0eLogoutResponse\":\n" +
+	"\rrefresh_token\x18\x01 \x01(\tR\frefreshToken\":\n" +
 	"\x13RefreshTokenRequest\x12#\n" +
 	"\rrefresh_token\x18\x01 \x01(\tR\frefreshToken\"^\n" +
 	"\x14RefreshTokenResponse\x12!\n" +
 	"\faccess_token\x18\x01 \x01(\tR\vaccessToken\x12#\n" +
-	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken2\xaa\x02\n" +
-	"\vAuthService\x12:\n" +
-	"\tPublicKey\x12\x15.idp.PublicKeyRequest\x1a\x16.idp.PublicKeyResponse\x127\n" +
+	"\rrefresh_token\x18\x02 \x01(\tR\frefreshToken2\xae\x02\n" +
+	"\vAuthService\x12;\n" +
+	"\tPublicKey\x12\x16.google.protobuf.Empty\x1a\x16.idp.PublicKeyResponse\x127\n" +
 	"\bRegister\x12\x14.idp.RegisterRequest\x1a\x15.idp.RegisterResponse\x12.\n" +
-	"\x05Login\x12\x11.idp.LoginRequest\x1a\x12.idp.LoginResponse\x121\n" +
-	"\x06Logout\x12\x12.idp.LogoutRequest\x1a\x13.idp.LogoutResponse\x12C\n" +
-	"\fRefreshToken\x12\x18.idp.RefreshTokenRequest\x1a\x19.idp.RefreshTokenResponse2\x99\x01\n" +
+	"\x05Login\x12\x11.idp.LoginRequest\x1a\x12.idp.LoginResponse\x124\n" +
+	"\x06Logout\x12\x12.idp.LogoutRequest\x1a\x16.google.protobuf.Empty\x12C\n" +
+	"\fRefreshToken\x12\x18.idp.RefreshTokenRequest\x1a\x19.idp.RefreshTokenResponse2\x94\x01\n" +
 	"\rClientService\x12C\n" +
-	"\fClientCreate\x12\x18.idp.ClientCreateRequest\x1a\x19.idp.ClientCreateResponse\x12C\n" +
-	"\fClientDelete\x12\x18.idp.ClientDeleteRequest\x1a\x19.idp.ClientDeleteResponseB\x16Z\x14revenko.idp.v1;idpv1b\x06proto3"
+	"\fClientCreate\x12\x18.idp.ClientCreateRequest\x1a\x19.idp.ClientCreateResponse\x12>\n" +
+	"\fClientDelete\x12\x16.google.protobuf.Empty\x1a\x16.google.protobuf.EmptyB\x16Z\x14revenko.idp.v1;idpv1b\x06proto3"
 
 var (
 	file_idp_idp_proto_rawDescOnce sync.Once
@@ -719,38 +554,35 @@ func file_idp_idp_proto_rawDescGZIP() []byte {
 	return file_idp_idp_proto_rawDescData
 }
 
-var file_idp_idp_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_idp_idp_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_idp_idp_proto_goTypes = []any{
-	(*PublicKeyRequest)(nil),     // 0: idp.PublicKeyRequest
-	(*PublicKeyResponse)(nil),    // 1: idp.PublicKeyResponse
-	(*ClientCreateRequest)(nil),  // 2: idp.ClientCreateRequest
-	(*ClientCreateResponse)(nil), // 3: idp.ClientCreateResponse
-	(*ClientDeleteRequest)(nil),  // 4: idp.ClientDeleteRequest
-	(*ClientDeleteResponse)(nil), // 5: idp.ClientDeleteResponse
-	(*RegisterRequest)(nil),      // 6: idp.RegisterRequest
-	(*RegisterResponse)(nil),     // 7: idp.RegisterResponse
-	(*LoginRequest)(nil),         // 8: idp.LoginRequest
-	(*LoginResponse)(nil),        // 9: idp.LoginResponse
-	(*LogoutRequest)(nil),        // 10: idp.LogoutRequest
-	(*LogoutResponse)(nil),       // 11: idp.LogoutResponse
-	(*RefreshTokenRequest)(nil),  // 12: idp.RefreshTokenRequest
-	(*RefreshTokenResponse)(nil), // 13: idp.RefreshTokenResponse
+	(*PublicKeyResponse)(nil),    // 0: idp.PublicKeyResponse
+	(*ClientCreateRequest)(nil),  // 1: idp.ClientCreateRequest
+	(*ClientCreateResponse)(nil), // 2: idp.ClientCreateResponse
+	(*RegisterRequest)(nil),      // 3: idp.RegisterRequest
+	(*RegisterResponse)(nil),     // 4: idp.RegisterResponse
+	(*LoginRequest)(nil),         // 5: idp.LoginRequest
+	(*LoginResponse)(nil),        // 6: idp.LoginResponse
+	(*LogoutRequest)(nil),        // 7: idp.LogoutRequest
+	(*RefreshTokenRequest)(nil),  // 8: idp.RefreshTokenRequest
+	(*RefreshTokenResponse)(nil), // 9: idp.RefreshTokenResponse
+	(*emptypb.Empty)(nil),        // 10: google.protobuf.Empty
 }
 var file_idp_idp_proto_depIdxs = []int32{
-	0,  // 0: idp.AuthService.PublicKey:input_type -> idp.PublicKeyRequest
-	6,  // 1: idp.AuthService.Register:input_type -> idp.RegisterRequest
-	8,  // 2: idp.AuthService.Login:input_type -> idp.LoginRequest
-	10, // 3: idp.AuthService.Logout:input_type -> idp.LogoutRequest
-	12, // 4: idp.AuthService.RefreshToken:input_type -> idp.RefreshTokenRequest
-	2,  // 5: idp.ClientService.ClientCreate:input_type -> idp.ClientCreateRequest
-	4,  // 6: idp.ClientService.ClientDelete:input_type -> idp.ClientDeleteRequest
-	1,  // 7: idp.AuthService.PublicKey:output_type -> idp.PublicKeyResponse
-	7,  // 8: idp.AuthService.Register:output_type -> idp.RegisterResponse
-	9,  // 9: idp.AuthService.Login:output_type -> idp.LoginResponse
-	11, // 10: idp.AuthService.Logout:output_type -> idp.LogoutResponse
-	13, // 11: idp.AuthService.RefreshToken:output_type -> idp.RefreshTokenResponse
-	3,  // 12: idp.ClientService.ClientCreate:output_type -> idp.ClientCreateResponse
-	5,  // 13: idp.ClientService.ClientDelete:output_type -> idp.ClientDeleteResponse
+	10, // 0: idp.AuthService.PublicKey:input_type -> google.protobuf.Empty
+	3,  // 1: idp.AuthService.Register:input_type -> idp.RegisterRequest
+	5,  // 2: idp.AuthService.Login:input_type -> idp.LoginRequest
+	7,  // 3: idp.AuthService.Logout:input_type -> idp.LogoutRequest
+	8,  // 4: idp.AuthService.RefreshToken:input_type -> idp.RefreshTokenRequest
+	1,  // 5: idp.ClientService.ClientCreate:input_type -> idp.ClientCreateRequest
+	10, // 6: idp.ClientService.ClientDelete:input_type -> google.protobuf.Empty
+	0,  // 7: idp.AuthService.PublicKey:output_type -> idp.PublicKeyResponse
+	4,  // 8: idp.AuthService.Register:output_type -> idp.RegisterResponse
+	6,  // 9: idp.AuthService.Login:output_type -> idp.LoginResponse
+	10, // 10: idp.AuthService.Logout:output_type -> google.protobuf.Empty
+	9,  // 11: idp.AuthService.RefreshToken:output_type -> idp.RefreshTokenResponse
+	2,  // 12: idp.ClientService.ClientCreate:output_type -> idp.ClientCreateResponse
+	10, // 13: idp.ClientService.ClientDelete:output_type -> google.protobuf.Empty
 	7,  // [7:14] is the sub-list for method output_type
 	0,  // [0:7] is the sub-list for method input_type
 	0,  // [0:0] is the sub-list for extension type_name
@@ -769,7 +601,7 @@ func file_idp_idp_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_idp_idp_proto_rawDesc), len(file_idp_idp_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   14,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   2,
 		},
