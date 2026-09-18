@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,7 +20,6 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthService_PublicKey_FullMethodName    = "/idp.AuthService/PublicKey"
 	AuthService_Register_FullMethodName     = "/idp.AuthService/Register"
 	AuthService_Login_FullMethodName        = "/idp.AuthService/Login"
 	AuthService_Logout_FullMethodName       = "/idp.AuthService/Logout"
@@ -30,10 +30,9 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthServiceClient interface {
-	PublicKey(ctx context.Context, in *PublicKeyRequest, opts ...grpc.CallOption) (*PublicKeyResponse, error)
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
-	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error)
+	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	RefreshToken(ctx context.Context, in *RefreshTokenRequest, opts ...grpc.CallOption) (*RefreshTokenResponse, error)
 }
 
@@ -43,16 +42,6 @@ type authServiceClient struct {
 
 func NewAuthServiceClient(cc grpc.ClientConnInterface) AuthServiceClient {
 	return &authServiceClient{cc}
-}
-
-func (c *authServiceClient) PublicKey(ctx context.Context, in *PublicKeyRequest, opts ...grpc.CallOption) (*PublicKeyResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(PublicKeyResponse)
-	err := c.cc.Invoke(ctx, AuthService_PublicKey_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *authServiceClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
@@ -75,9 +64,9 @@ func (c *authServiceClient) Login(ctx context.Context, in *LoginRequest, opts ..
 	return out, nil
 }
 
-func (c *authServiceClient) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error) {
+func (c *authServiceClient) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(LogoutResponse)
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, AuthService_Logout_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -99,10 +88,9 @@ func (c *authServiceClient) RefreshToken(ctx context.Context, in *RefreshTokenRe
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility.
 type AuthServiceServer interface {
-	PublicKey(context.Context, *PublicKeyRequest) (*PublicKeyResponse, error)
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
-	Logout(context.Context, *LogoutRequest) (*LogoutResponse, error)
+	Logout(context.Context, *LogoutRequest) (*emptypb.Empty, error)
 	RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
@@ -114,16 +102,13 @@ type AuthServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAuthServiceServer struct{}
 
-func (UnimplementedAuthServiceServer) PublicKey(context.Context, *PublicKeyRequest) (*PublicKeyResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method PublicKey not implemented")
-}
 func (UnimplementedAuthServiceServer) Register(context.Context, *RegisterRequest) (*RegisterResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Register not implemented")
 }
 func (UnimplementedAuthServiceServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Login not implemented")
 }
-func (UnimplementedAuthServiceServer) Logout(context.Context, *LogoutRequest) (*LogoutResponse, error) {
+func (UnimplementedAuthServiceServer) Logout(context.Context, *LogoutRequest) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Logout not implemented")
 }
 func (UnimplementedAuthServiceServer) RefreshToken(context.Context, *RefreshTokenRequest) (*RefreshTokenResponse, error) {
@@ -148,24 +133,6 @@ func RegisterAuthServiceServer(s grpc.ServiceRegistrar, srv AuthServiceServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&AuthService_ServiceDesc, srv)
-}
-
-func _AuthService_PublicKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PublicKeyRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).PublicKey(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AuthService_PublicKey_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).PublicKey(ctx, req.(*PublicKeyRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _AuthService_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -248,10 +215,6 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AuthServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "PublicKey",
-			Handler:    _AuthService_PublicKey_Handler,
-		},
-		{
 			MethodName: "Register",
 			Handler:    _AuthService_Register_Handler,
 		},
@@ -282,7 +245,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ClientServiceClient interface {
 	ClientCreate(ctx context.Context, in *ClientCreateRequest, opts ...grpc.CallOption) (*ClientCreateResponse, error)
-	ClientDelete(ctx context.Context, in *ClientDeleteRequest, opts ...grpc.CallOption) (*ClientDeleteResponse, error)
+	ClientDelete(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type clientServiceClient struct {
@@ -303,9 +266,9 @@ func (c *clientServiceClient) ClientCreate(ctx context.Context, in *ClientCreate
 	return out, nil
 }
 
-func (c *clientServiceClient) ClientDelete(ctx context.Context, in *ClientDeleteRequest, opts ...grpc.CallOption) (*ClientDeleteResponse, error) {
+func (c *clientServiceClient) ClientDelete(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(ClientDeleteResponse)
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, ClientService_ClientDelete_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -318,7 +281,7 @@ func (c *clientServiceClient) ClientDelete(ctx context.Context, in *ClientDelete
 // for forward compatibility.
 type ClientServiceServer interface {
 	ClientCreate(context.Context, *ClientCreateRequest) (*ClientCreateResponse, error)
-	ClientDelete(context.Context, *ClientDeleteRequest) (*ClientDeleteResponse, error)
+	ClientDelete(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	mustEmbedUnimplementedClientServiceServer()
 }
 
@@ -332,7 +295,7 @@ type UnimplementedClientServiceServer struct{}
 func (UnimplementedClientServiceServer) ClientCreate(context.Context, *ClientCreateRequest) (*ClientCreateResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ClientCreate not implemented")
 }
-func (UnimplementedClientServiceServer) ClientDelete(context.Context, *ClientDeleteRequest) (*ClientDeleteResponse, error) {
+func (UnimplementedClientServiceServer) ClientDelete(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method ClientDelete not implemented")
 }
 func (UnimplementedClientServiceServer) mustEmbedUnimplementedClientServiceServer() {}
@@ -375,7 +338,7 @@ func _ClientService_ClientCreate_Handler(srv interface{}, ctx context.Context, d
 }
 
 func _ClientService_ClientDelete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ClientDeleteRequest)
+	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -387,7 +350,7 @@ func _ClientService_ClientDelete_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: ClientService_ClientDelete_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ClientServiceServer).ClientDelete(ctx, req.(*ClientDeleteRequest))
+		return srv.(ClientServiceServer).ClientDelete(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }

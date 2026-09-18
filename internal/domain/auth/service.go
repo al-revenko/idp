@@ -2,9 +2,6 @@ package auth
 
 import (
 	"context"
-	"crypto/rsa"
-	"crypto/x509"
-	"encoding/pem"
 	"errors"
 	"time"
 	"uuid"
@@ -31,12 +28,10 @@ type UserProvider interface {
 
 type ClientProvider interface {
 	GetClientById(ctx context.Context, id string) (model.Client, error)
-	CreateClient(ctx context.Context, name string) (string, string, error)
 }
 
-type RsaSigner interface {
-	SignJWT(token *jwt.Token) ([]byte, error)
-	PubKey() *rsa.PublicKey
+type JWSProvider interface {
+	JWS(token *jwt.Token) ([]byte, error)
 }
 
 type Hasher interface {
@@ -45,7 +40,7 @@ type Hasher interface {
 }
 
 type TokenParams struct {
-	Signer                      RsaSigner
+	Signer                      JWSProvider
 	Hash                        Hasher
 	Issuer                      string
 	AccessTokenTTL              time.Duration
@@ -63,24 +58,6 @@ type Service struct {
 
 func NewService(store *Store, client ClientProvider, user UserProvider, token *TokenParams) *Service {
 	return &Service{store: store, client: client, user: user, token: token}
-}
-
-func (s *Service) GetPubKeyPemBlock() ([]byte, error) {
-	op := pkg.Op("Service.GetPubKeyPemBlock")
-
-	rsaPubKey := s.token.Signer.PubKey()
-
-	pubKeyBytes, err := x509.MarshalPKIXPublicKey(rsaPubKey)
-	if err != nil {
-		return nil, op.Err(err)
-	}
-
-	pemBlock := pem.EncodeToMemory(&pem.Block{
-		Type:  "PUBLIC KEY",
-		Bytes: pubKeyBytes,
-	})
-
-	return pemBlock, nil
 }
 
 func (s *Service) Register(ctx context.Context, username, password string) (userId string, err error) {
@@ -140,7 +117,7 @@ func (s *Service) Login(ctx context.Context, clientId string, username, password
 	if err != nil {
 		return "", "", op.Err(err)
 	}
-	accessTokenB, err := s.token.Signer.SignJWT(unsignedAccessToken)
+	accessTokenB, err := s.token.Signer.JWS(unsignedAccessToken)
 	if err != nil {
 		return "", "", op.Err(err)
 	}
@@ -186,7 +163,7 @@ func (s *Service) RefreshToken(ctx context.Context, oldRefreshToken string) (acc
 	if err != nil {
 		return "", "", op.Err(err)
 	}
-	accessTokenB, err := s.token.Signer.SignJWT(unsignedAccessToken)
+	accessTokenB, err := s.token.Signer.JWS(unsignedAccessToken)
 	if err != nil {
 		return "", "", op.Err(err)
 	}

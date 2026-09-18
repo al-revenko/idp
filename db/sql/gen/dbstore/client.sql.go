@@ -10,18 +10,18 @@ import (
 )
 
 const createClient = `-- name: CreateClient :one
-INSERT INTO client (name, secret_hash)
+INSERT INTO client (name, pub_key_url)
 VALUES ($1, $2)
 RETURNING id
 `
 
 type CreateClientParams struct {
-	Name       string
-	SecretHash string
+	Name      string
+	PubKeyUrl string
 }
 
 func (q *Queries) CreateClient(ctx context.Context, arg CreateClientParams) (string, error) {
-	row := q.db.QueryRow(ctx, createClient, arg.Name, arg.SecretHash)
+	row := q.db.QueryRow(ctx, createClient, arg.Name, arg.PubKeyUrl)
 	var id string
 	err := row.Scan(&id)
 	return id, err
@@ -38,13 +38,13 @@ func (q *Queries) DeleteClient(ctx context.Context, id string) error {
 }
 
 const getClientById = `-- name: GetClientById :one
-SELECT id, name, secret_hash FROM client
+SELECT id, name, pub_key_url FROM client
 WHERE id = $1 LIMIT 1
 `
 
 func (q *Queries) GetClientById(ctx context.Context, id string) (Client, error) {
 	row := q.db.QueryRow(ctx, getClientById, id)
 	var i Client
-	err := row.Scan(&i.ID, &i.Name, &i.SecretHash)
+	err := row.Scan(&i.ID, &i.Name, &i.PubKeyUrl)
 	return i, err
 }

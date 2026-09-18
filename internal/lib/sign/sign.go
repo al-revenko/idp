@@ -20,5 +20,5 @@ type Operation struct {
 }
 
 func (o Operation) Err(e error) error {
-	return fmt.Errorf("%s: %w", o.Name, e)
+	return fmt.Errorf("%s > %w", o.Name, e)
 }

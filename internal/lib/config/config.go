@@ -25,12 +25,17 @@ const (
 )
 
 type Config struct {
-	AppName string
-	Env     string
-	Crypt   CryptConfig
-	Auth    AuthConfig
-	Store   StoreConfig
-	GRPC    GRPCConfig
+	ServiceName string
+	Env         string
+	Crypt       CryptConfig
+	Auth        AuthConfig
+	Store       StoreConfig
+	GRPC        GRPCConfig
+	HTTP        HTTPConfig
+}
+
+type HTTPConfig struct {
+	Addr string
 }
 
 type GRPCConfig struct {
@@ -51,8 +56,9 @@ type StoreConfig struct {
 }
 
 type CryptConfig struct {
-	JWTSignCertPath string
-	Hash            HashConfig
+	KeyRotationInterval    time.Duration
+	KeyRotationGracePeriod time.Duration
+	Hash                   HashConfig
 }
 
 type HashConfig struct {
@@ -68,12 +74,18 @@ func MustLoad() Config {
 	envName := getEnvFileName()
 
 	fatalErr := func(err error) {
-		log.Fatalf(`Couldn't load configuration file: "%s"; Error: %s`, envName, err.Error())
+		log.Fatalf(`Configuration load error: %s`, err.Error())
 	}
 
-	err := godotenv.Load(envName)
-	if err != nil {
-		fatalErr(err)
+	if envName != "" {
+		fatalErr := func(err error) {
+			log.Fatalf(`Couldn't load .env file: "%s"; Error: %s`, envName, err.Error())
+		}
+
+		err := godotenv.Load()
+		if err != nil {
+			fatalErr(err)
+		}
 	}
 
 	cfg, err := mapEnvToConfig()
@@ -93,9 +105,7 @@ func getEnvFileName() string {
 	if res == "" {
 		res = os.Getenv(EnvFileNameVar)
 
-		if res == "" {
-			res = defaultConfigEnv
-		}
+		return res
 	}
 
 	return res
@@ -104,11 +114,11 @@ func getEnvFileName() string {
 func mapEnvToConfig() (Config, error) {
 	cfg := &Config{}
 
-	appName := os.Getenv("APP_NAME")
-	if appName == "" {
-		appName = defaultAppName
+	serviceName := os.Getenv("SERVICE_NAME")
+	if serviceName == "" {
+		return Config{}, fmt.Errorf(`"SERVICE_NAME" env var is required`)
 	}
-	cfg.AppName = appName
+	cfg.ServiceName = serviceName
 
 	env := os.Getenv("ENV")
 	switch env {
@@ -116,7 +126,7 @@ func mapEnvToConfig() (Config, error) {
 	case EnvDev:
 	case EnvProd:
 	default:
-		return Config{}, fmt.Errorf(`"env" value must be: %s, %s or %s; Passed: %s`, EnvLocal, EnvDev, EnvProd, env)
+		return Config{}, fmt.Errorf(`value of "ENV" var must be: %s, %s or %s; Passed: %s`, EnvLocal, EnvDev, EnvProd, env)
 	}
 	cfg.Env = env
 
@@ -135,12 +145,28 @@ func mapEnvToConfig() (Config, error) {
 		return Config{}, err
 	}
 
+	err = mapHTTP(cfg)
+	if err != nil {
+		return Config{}, err
+	}
+
 	err = mapGRPC(cfg)
 	if err != nil {
 		return Config{}, err
 	}
 
 	return *cfg, nil
+}
+
+func mapHTTP(cfg *Config) error {
+	httpAddr := os.Getenv("HTTP_ADDR")
+	if httpAddr == "" {
+		return fmt.Errorf(`"HTTP_ADDR" env var is required`)
+	}
+
+	cfg.HTTP.Addr = httpAddr
+
+	return nil
 }
 
 func mapGRPC(cfg *Config) error {
@@ -221,12 +247,6 @@ func mapAuth(cfg *Config) error {
 }
 
 func mapCrypt(cfg *Config) error {
-	jwtSecretPEMPath := os.Getenv("JWT_SIGN_CERT_PATH")
-	if jwtSecretPEMPath == "" {
-		return fmt.Errorf(`"JWT_SIGN_CERT_PATH" env var is required`)
-	}
-	cfg.Crypt.JWTSignCertPath = jwtSecretPEMPath
-
 	hashMemory, err := parseUint(os.Getenv("HASH_MEMORY"), defaultHashMemory)
 	if err != nil {
 		return err
@@ -256,6 +276,18 @@ func mapCrypt(cfg *Config) error {
 		return err
 	}
 	cfg.Crypt.Hash.SaltLength = uint32(hashSaltLength)
+
+	keyRotationInterval, err := parseDuration("KEY_ROTATION_INTERVAL", defaultKeyRotationInterval)
+	if err != nil {
+		return err
+	}
+	cfg.Crypt.KeyRotationInterval = keyRotationInterval
+
+	keyRotationGracePeriod, err := parseDuration("KEY_ROTATION_GRACE_PERIOD", defaultKeyRotationGracePeriod)
+	if err != nil {
+		return err
+	}
+	cfg.Crypt.KeyRotationGracePeriod = keyRotationGracePeriod
 
 	return nil
 }

@@ -5,9 +5,9 @@
 package dbstore
 
 type Client struct {
-	ID         string
-	Name       string
-	SecretHash string
+	ID        string
+	Name      string
+	PubKeyUrl string
 }
 
 type User struct {

@@ -8,6 +8,7 @@ import (
 	"github.com/al-revenko/idp/internal/lib/meta"
 	idpv1 "github.com/al-revenko/idp/proto/gen/idp"
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type Validator interface {
@@ -22,15 +23,6 @@ type GRPC struct {
 
 func RegisterGRPC(grpc *grpc.Server, service *Service, validator Validator) {
 	idpv1.RegisterAuthServiceServer(grpc, &GRPC{service: service, validate: validator})
-}
-
-func (g *GRPC) PublicKey(ctx context.Context, req *idpv1.PublicKeyRequest) (*idpv1.PublicKeyResponse, error) {
-	pem, err := g.service.GetPubKeyPemBlock()
-	if err != nil {
-		return nil, err
-	}
-
-	return &idpv1.PublicKeyResponse{RsaPubPem: pem}, nil
 }
 
 func (g *GRPC) Register(ctx context.Context, req *idpv1.RegisterRequest) (*idpv1.RegisterResponse, error) {
@@ -89,11 +81,11 @@ func (g *GRPC) RefreshToken(ctx context.Context, req *idpv1.RefreshTokenRequest)
 	}, nil
 }
 
-func (g *GRPC) Logout(ctx context.Context, req *idpv1.LogoutRequest) (*idpv1.LogoutResponse, error) {
+func (g *GRPC) Logout(ctx context.Context, req *idpv1.LogoutRequest) (*emptypb.Empty, error) {
 	err := g.service.Logout(ctx, req.RefreshToken)
 	if err != nil {
 		return nil, err
 	}
 
-	return &idpv1.LogoutResponse{}, nil
+	return &emptypb.Empty{}, nil
 }
