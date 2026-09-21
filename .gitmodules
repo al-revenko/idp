@@ -1,0 +1,3 @@
+[submodule "proto/idp"]
+	path = proto/idp
+	url = https://github.com/al-revenko/idp-proto.git
