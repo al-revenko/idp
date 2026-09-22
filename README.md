@@ -27,7 +27,7 @@
 idp/
 ├── cmd/
 │   ├── idp/                  # Точка входа основного сервиса
-│   └── jwks-mock/            # Мок внешнего клиента 
+│   └── client-mock/          # Мок внешнего клиента
 ├── db/
 │   └── sql/
 │       ├── migrations/       # goose-миграции
@@ -40,22 +40,30 @@ idp/
 │   │   ├── http.go
 │   │   ├── grpc.go
 │   │   ├── workers.go
-│   │   └── grpc/interceptor/
+│   │   ├── utils.go
+│   │   └── transport/
+│   │       ├── transport.go
+│   │       ├── utils.go
+│   │       ├── grpc/
+│   │       │   └── interceptor/
+│   │       └── http/
+│   │           ├── http.go
+│   │           └── middleware/
 │   ├── domain/               # Бизнес-логика
 │   │   ├── model/
 │   │   ├── user/
 │   │   ├── client/
 │   │   ├── auth/
 │   │   └── error.go          # DomainError и коды ошибок
-│   └── lib/                  # Инфраструктурные утилиты
+│   └── lib/                  # Инфраструктурные пакеты
 │       ├── config/
-│       ├── crypt/            # Криптографические утилиты
+│       ├── crypt/            # Криптографические пакеты
 │       │   ├── hash/         # Хэширование
 │       │   │   ├── argon2/   # Алгоритм Argon2
 │       │   │   └── blake3/   # Алгоритм Blake3
 │       │   └── keys/         # Пакет управления ключами
-│       ├── valid/            # Утилиты валидации
-│       ├── sign/             # Утилита именования операций/ошибок
+│       ├── valid/            # Пакет валидации
+│       ├── sign/             # Пакет именования операций/ошибок
 │       └── meta/             # Ключи context
 └── proto/                    # Protobuf контракты
     ├── idp/idp.proto         # Контракты сервиса, standalone репозиторий
@@ -85,22 +93,23 @@ idp/
 
 ### HTTP API
 
-| HTTP                    | Назначение                   |
-| ----------------------- | ---------------------------- |
-| `GET /.well-known/jwks` | Получение JWKS (ECDSA P-256) |
+| HTTP                         | Назначение                   |
+| ---------------------------- | ---------------------------- |
+| `GET /.well-known/jwks.json` | Получение JWKS (ECDSA P-256) |
+| `GET /health`                | Health check                 |
 
 ## ENV
 
 ### Обязательные
 
-| Переменная           | Назначение                          |
-| -------------------- | ----------------------------------- |
-| `SERVICE_NAME`       | Имя сервиса (issuer JWT)            |
-| `ENV`                | Окружение: `local` / `dev` / `prod` |
-| `DB_CONN_STR`        | Строка подключения PostgreSQL       |
-| `REDIS_CONN_STR`     | Строка подключения Redis            |
-| `HTTP_ADDR`          | Адрес HTTP-сервера           |
-| `GRPC_ADDR`          | Адрес gRPC-сервера                  |
+| Переменная       | Назначение                          |
+| ---------------- | ----------------------------------- |
+| `SERVICE_NAME`   | Имя сервиса (issuer JWT)            |
+| `ENV`            | Окружение: `local` / `dev` / `prod` |
+| `DB_CONN_STR`    | Строка подключения PostgreSQL       |
+| `REDIS_CONN_STR` | Строка подключения Redis            |
+| `HTTP_ADDR`      | Адрес HTTP-сервера                  |
+| `GRPC_ADDR`      | Адрес gRPC-сервера                  |
 
 ### Опциональные (дефолты)
 
@@ -111,7 +120,7 @@ idp/
 | `REFRESH_TOKEN_REVOKED_STORE_TTL` | `10m`     | TTL хранения отозванных refresh-токенов  |
 | `REFRESH_TOKEN_GRACE_PERIOD`      | `30s`     | Grace period при ротации refresh-токенов |
 | `GRPC_TIMEOUT`                    | `5s`      | Таймаут gRPC                             |
-| `KEY_ROTATION_INTERVAL`           | `24h`     | Интервал ротации ключей          |
+| `KEY_ROTATION_INTERVAL`           | `24h`     | Интервал ротации ключей                  |
 | `KEY_ROTATION_GRACE_PERIOD`       | `1h`      | Grace period ротации ключей              |
 | `HASH_MEMORY`                     | `2097152` | Argon2: память (байт)                    |
 | `HASH_ITERATIONS`                 | `1`       | Argon2: итерации                         |
@@ -145,12 +154,12 @@ idp/
 
    gRPC-сервер — на `GRPC_ADDR` (по умолчанию `localhost:50051`), HTTP (JWKS) — на `HTTP_ADDR` (по умолчанию `localhost:50050`).
 
-4. **(Опционально) Запустить JWKS mock** — имитация внешнего клиента:
+4. **(Опционально) Запустить client-mock** — имитация внешнего клиента:
 
    ```bash
-   task tjwks <clientId-uuid>
+   task client-mock <clientId-uuid>
    ```
 
    Поднимает HTTP-сервер на `:8081`:
-   - `GET /.well-known/jwks` — JWKS (RSA-2048, RS256)
+   - `GET /.well-known/jwks.json` — JWKS (RSA-2048, RS256)
    - `GET /bearer` — подписанный JWT клиента в формате `{"Bearer": base64("clientId:token")}`

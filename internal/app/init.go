@@ -3,10 +3,11 @@ package app
 import (
 	"context"
 	"log/slog"
-	"net/http"
 
 	"github.com/al-revenko/idp/db/sql/gen/dbstore"
-	"github.com/al-revenko/idp/internal/app/grpc/interceptor"
+	"github.com/al-revenko/idp/internal/app/transport/grpc/interceptor"
+	apphttp "github.com/al-revenko/idp/internal/app/transport/http"
+	"github.com/al-revenko/idp/internal/app/transport/http/middleware"
 	"github.com/al-revenko/idp/internal/domain/auth"
 	"github.com/al-revenko/idp/internal/domain/client"
 	"github.com/al-revenko/idp/internal/domain/user"
@@ -21,7 +22,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-func initApp(ctx context.Context, cfg *config.Config, log *slog.Logger) (*http.ServeMux, *grpc.Server, *pgx.Conn, *redis.Client, error) {
+func initApp(ctx context.Context, cfg *config.Config, log *slog.Logger) (*apphttp.Server, *grpc.Server, *pgx.Conn, *redis.Client, error) {
 	op := pkg.Op("initApp")
 
 	validator := valid.New()
@@ -70,12 +71,12 @@ func initApp(ctx context.Context, cfg *config.Config, log *slog.Logger) (*http.S
 	client.RegisterGRPC(grpcServer, clientService, validator)
 	auth.RegisterGRPC(grpcServer, authService, validator)
 
-	httpMux := http.NewServeMux()
-	registerHTTP(httpMux, keyManager, log)
+	httpServer := apphttp.NewServer(middleware.TraceMiddleware(log, ExcludeTraceHTTP))
+	RegisterHTTP(httpServer, keyManager, cfg.ServiceName, log)
 
 	go keyRotationWorker(ctx, keyManager, cfg.Crypt.KeyRotationInterval, log)
 
-	return httpMux, grpcServer, dbconn, redisConn, nil
+	return httpServer, grpcServer, dbconn, redisConn, nil
 }
 
 func cryptInit(cfg *config.Config) (*keys.Manager, *argon2.Hasher, *blake3.Hasher, error) {

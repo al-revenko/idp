@@ -16,10 +16,10 @@ tasks:
       - go run ./cmd/idp/main.go
     silent: true
 
-  tjwks:
-    desc: "Start JWKS mock server"
+  client-mock:
+    desc: "Start client mock server"
     cmds:
-      - go run ./cmd/jwks-mock/main.go {{.CLI_ARGS}}
+      - go run ./cmd/client-mock/main.go {{.CLI_ARGS}}
     silent: true
 
   gen-proto:

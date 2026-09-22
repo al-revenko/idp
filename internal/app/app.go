@@ -60,7 +60,7 @@ func (a *App) Start() error {
 		return op.Err(a.ctx.Err())
 	}
 
-	httpMux, grpcServer, dbconn, redisConn, err := initApp(a.ctx, &a.config, a.log)
+	httpServer, grpcServer, dbconn, redisConn, err := initApp(a.ctx, &a.config, a.log)
 	if err != nil {
 		return op.Err(err)
 	}
@@ -70,7 +70,7 @@ func (a *App) Start() error {
 	a.grpcServer = grpcServer
 	a.httpServer = &http.Server{
 		Addr:    a.config.HTTP.Addr,
-		Handler: httpMux,
+		Handler: httpServer,
 	}
 
 	g.Go(func() error {

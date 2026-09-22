@@ -80,7 +80,7 @@ func run() error {
 
 	jwksBytes, _ := json.Marshal(jwks)
 
-	http.HandleFunc("/.well-known/jwks", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/.well-known/jwks.json", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/jwk-set+json")
 		w.Write(jwksBytes)
 	})
@@ -119,7 +119,7 @@ func run() error {
 
 	addr := fmt.Sprintf(":%d", jwksPort)
 	fmt.Printf("Mock JWKS server starting with clientId %s\n\n", clientID)
-	fmt.Printf("JWKS:   http://localhost%s/.well-known/jwks\n", addr)
+	fmt.Printf("JWKS:   http://localhost%s/.well-known/jwks.json\n", addr)
 	fmt.Printf("Bearer: http://localhost%s/bearer\n", addr)
 
 	if err := http.ListenAndServe(addr, nil); err != nil {
